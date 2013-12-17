@@ -76,4 +76,11 @@ public class Usuarios implements Serializable{
         this.contribuicao = contribuicao;
         this.artefatoContribuicao = artefatoContribuicao;
     }
+
+    @Override
+    public String toString() {
+        return "Usuarios{" + "id=" + id + ", nome=" + nome + ", email=" + email + ", contribuicao=" + contribuicao + ", artefatoContribuicao=" + artefatoContribuicao + '}';
+    }
+    
+    
 }

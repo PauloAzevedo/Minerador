@@ -121,31 +121,6 @@ public class Util {
         }.start();
     }
 
-    public static void iniciarContador(final JProgressBar progress, final JDialog dialog) {
-        progress.setMaximum(100);
-        progress.setStringPainted(true);
-        progress.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        progress.setIndeterminate(true);
-
-        new Thread() {
-            @Override
-            public void run() {
-                while (true) {
-                    if(progress.getValue()< 100){
-                    progress.setValue(progress.getValue() + 1);
-                    }else{
-                        dialog.dispose();
-                    }
-                    try {
-                        sleep(500);
-                    } catch (Exception e) {
-                        System.out.println(e);
-                    }
-                }
-            }
-        }.start();
-    }
-
     public static Calendar stringToCalendar(String data) {
         try {
             Calendar c = Calendar.getInstance();
