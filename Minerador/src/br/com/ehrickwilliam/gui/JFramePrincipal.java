@@ -49,6 +49,7 @@ public class JFramePrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
         jTextFieldNome = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
@@ -60,8 +61,11 @@ public class JFramePrincipal extends javax.swing.JFrame {
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
         jComboBoxComponente = new javax.swing.JComboBox();
+        jRadioButton3 = new javax.swing.JRadioButton();
+        jRadioButton4 = new javax.swing.JRadioButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuSalvar = new javax.swing.JMenu();
+        jMenuCriarBase = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Minerador de Dados");
@@ -144,6 +148,17 @@ public class JFramePrincipal extends javax.swing.JFrame {
         jComboBoxComponente.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         getContentPane().add(jComboBoxComponente, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 260, -1));
 
+        buttonGroup2.add(jRadioButton3);
+        jRadioButton3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jRadioButton3.setSelected(true);
+        jRadioButton3.setText("Modo Normal");
+        getContentPane().add(jRadioButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 160, -1, -1));
+
+        buttonGroup2.add(jRadioButton4);
+        jRadioButton4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jRadioButton4.setText("Modo Decaimento");
+        getContentPane().add(jRadioButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 160, -1, -1));
+
         jMenuBar1.setMinimumSize(new java.awt.Dimension(56, 31));
         jMenuBar1.setPreferredSize(new java.awt.Dimension(396, 31));
 
@@ -155,6 +170,15 @@ public class JFramePrincipal extends javax.swing.JFrame {
             }
         });
         jMenuBar1.add(jMenuSalvar);
+
+        jMenuCriarBase.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/ehrickwilliam/icon/008.png"))); // NOI18N
+        jMenuCriarBase.setText("Criar Base De Dados");
+        jMenuCriarBase.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenuCriarBaseMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenuCriarBase);
 
         setJMenuBar(jMenuBar1);
 
@@ -197,9 +221,15 @@ public class JFramePrincipal extends javax.swing.JFrame {
         jLabel2.setText("Informe o nome do componente:");
     }//GEN-LAST:event_jRadioButton2ActionPerformed
 
+    private void jMenuCriarBaseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuCriarBaseMouseClicked
+        // TODO add your handling code here:
+        Util.abrirDialogCentralizado(new JDialogCriacaoBase(this, rootPaneCheckingEnabled));
+    }//GEN-LAST:event_jMenuCriarBaseMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JCheckBox jCheckBoxUser;
     private javax.swing.JComboBox jComboBoxComponente;
     private javax.swing.JFormattedTextField jFormattedTextFieldCpf;
@@ -209,9 +239,12 @@ public class JFramePrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenu jMenuCriarBase;
     private javax.swing.JMenu jMenuSalvar;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JRadioButton jRadioButton3;
+    private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JTextField jTextFieldNome;
     // End of variables declaration//GEN-END:variables
 

@@ -37,7 +37,7 @@ public class Leitor {
 
     public void listarUsuarios() throws SQLException {
         emails = new ArrayList();
-        ResultSet retornoConsultaPessoas = retornoConsultaPessoas("select email FROM people ORDER BY email ASC;");
+        ResultSet retornoConsultaPessoas = retornoConsultaPessoas("select email FROM people ORDER BY email ASC LIMIT 0,100;");
 
         while (retornoConsultaPessoas.next()) {
             String email = retornoConsultaPessoas.getString("email");

@@ -132,6 +132,9 @@ public class JDialogLoading extends javax.swing.JDialog {
             retornoConsulta(get.toString());
             Double calculoTotalExperiencia = calculoTotalExperiencia();
             calculoExperienciaPorUsuario(calculoTotalExperiencia);
+            this.dispose();
+            Util.abrirDialogCentralizado(new JDialogResultado(null, rootPaneCheckingEnabled));
+
         } catch (SQLException ex) {
             Logger.getLogger(JDialogLoading.class.getName()).log(Level.SEVERE, null, ex);
         }
