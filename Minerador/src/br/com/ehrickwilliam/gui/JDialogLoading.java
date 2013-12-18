@@ -223,11 +223,7 @@ public class JDialogLoading extends javax.swing.JDialog {
         jProgressBar.setValue(0);
         jLabelEtapa.setText("Etapa calculo de experiencia: 2/3");
         for (Usuarios usuarios : usuariosContribuicoes) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(JDialogLoading.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
             soma = soma + usuarios.getContribuicao();
             this.setTitle(usuarios.getEmail());
             jProgressBar.setValue(jProgressBar.getValue() + 1);
@@ -244,11 +240,7 @@ public class JDialogLoading extends javax.swing.JDialog {
         jProgressBar.setValue(0);
         jLabelEtapa.setText("Etapa calculo de experiencia do usuario: 3/3");
         for (Usuarios usuarios : usuariosContribuicoes) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(JDialogLoading.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
             this.setTitle(usuarios.getEmail());
             jProgressBar.setValue(jProgressBar.getValue() + 1);
             jLabelstatus.setText("Processando usuário: " + usuarios.getEmail() + "");
