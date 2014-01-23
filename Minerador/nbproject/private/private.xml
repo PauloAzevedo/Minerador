@@ -2,13 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/Erick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/bibliotecas/Leitor.java</file>
-            <file>file:/C:/Users/Erick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/daos/DaoUsuarios.java</file>
-            <file>file:/C:/Users/Erick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/gui/JDialogResultado.java</file>
-            <file>file:/C:/Users/Erick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/daos/DaoGenerics.java</file>
-            <file>file:/C:/Users/Erick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/gui/JFramePrincipal.java</file>
-            <file>file:/C:/Users/Erick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/gui/JDialogLoading.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

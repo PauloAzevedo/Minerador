@@ -20,6 +20,9 @@ public interface Dao<T> {
      */
     public void persistir(T entidade);
 
+    public void persistir2(T o);
+
+    
     /**
      * Remove o Elemento da base de dados
      *

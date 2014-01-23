@@ -15,7 +15,8 @@ import org.hibernate.Transaction;
  */
 public class TransactionManager {
 
-    static Session session = null;
+    private static Session session = null;
+    
     static Transaction transaction = null;
 
     public static void beginTransaction() {
@@ -48,21 +49,23 @@ public class TransactionManager {
         closeCurrentSession();
     }
 
-    public static Session getCurrentSession() {
+    public synchronized static Session getCurrentSession() {
         /*Automatizando a criação da transação.*/
         if (session == null) {
             Session session2 = HibernateConfiguration.openConnect();
             // System.out.println("========================="+session2.getFlushMode());
             session2.setFlushMode(FlushMode.ALWAYS);
-            return session2;
+            session = session2;
         }
         return session;
     }
 
-    public static void closeCurrentSession() {
-        session.flush();
-        session.close();
-        transaction = null;
-        session = null;
+    public synchronized static void closeCurrentSession() {
+        if (session != null) {
+            session.flush();
+            session.close();
+            transaction = null;
+            session = null;
+        }
     }
 }

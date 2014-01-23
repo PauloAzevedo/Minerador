@@ -27,6 +27,12 @@ public class DaoGenerics<T> implements Dao<T> {
     }
 
     @Override
+    public void persistir2(T o) {
+        session.merge(o);
+        session.flush();
+    }
+
+    @Override
     public void remover(T o) {
         session.delete(o);
         session.flush();

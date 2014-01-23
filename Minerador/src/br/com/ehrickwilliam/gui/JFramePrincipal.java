@@ -30,8 +30,7 @@ public class JFramePrincipal extends javax.swing.JFrame {
             System.out.println(ex);
         }
         initComponents();
-       
-        jTextFieldNome.setEnabled(false);
+
         HibernateConfiguration.setBase("bicho");
         HibernateConfiguration.setHost("localhost");
         HibernateConfiguration.setUser("root");
@@ -50,22 +49,22 @@ public class JFramePrincipal extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
-        jLabel1 = new javax.swing.JLabel();
-        jTextFieldNome = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jFormattedTextFieldCpf = new javax.swing.JFormattedTextField();
+        jFormattedTextFieldInicial = new javax.swing.JFormattedTextField();
         jLabel5 = new javax.swing.JLabel();
-        jFormattedTextFieldCpf1 = new javax.swing.JFormattedTextField();
-        jCheckBoxUser = new javax.swing.JCheckBox();
+        jFormattedTextFieldFinal = new javax.swing.JFormattedTextField();
         jLabel2 = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
+        jRadioButtonGit = new javax.swing.JRadioButton();
+        jRadioButtonMysql = new javax.swing.JRadioButton();
         jComboBoxComponente = new javax.swing.JComboBox();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton4 = new javax.swing.JRadioButton();
+        jRadioButtonNormal = new javax.swing.JRadioButton();
+        jRadioButtonDecaimento = new javax.swing.JRadioButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuSalvar = new javax.swing.JMenu();
         jMenuCriarBase = new javax.swing.JMenu();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Minerador de Dados");
@@ -75,89 +74,66 @@ public class JFramePrincipal extends javax.swing.JFrame {
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel1.setText("E-mail do usuário:");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, 10));
-
-        jTextFieldNome.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldNomeActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jTextFieldNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, 260, -1));
-
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel4.setText("Data Inicíal (não informar utilizara a data da 1º interação) :");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, -1, -1));
 
         try {
-            jFormattedTextFieldCpf.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+            jFormattedTextFieldInicial.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        getContentPane().add(jFormattedTextFieldCpf, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 260, -1));
+        getContentPane().add(jFormattedTextFieldInicial, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 260, -1));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel5.setText("Data Final (não informar utilizara a data da ultima interação):");
         getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 80, -1, -1));
 
         try {
-            jFormattedTextFieldCpf1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+            jFormattedTextFieldFinal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        jFormattedTextFieldCpf1.setText("31/12/2012");
-        getContentPane().add(jFormattedTextFieldCpf1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 100, 300, -1));
-
-        jCheckBoxUser.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jCheckBoxUser.setSelected(true);
-        jCheckBoxUser.setText("Executar para todos os usuários");
-        jCheckBoxUser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxUserActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jCheckBoxUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 40, -1, -1));
+        jFormattedTextFieldFinal.setText("31/12/2012");
+        getContentPane().add(jFormattedTextFieldFinal, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 100, 280, -1));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel2.setText("Informe o nome do componente:");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, -1, 10));
 
-        buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jRadioButton1.setText("GitHub");
-        jRadioButton1.setEnabled(false);
-        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(jRadioButtonGit);
+        jRadioButtonGit.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jRadioButtonGit.setText("GitHub");
+        jRadioButtonGit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton1ActionPerformed(evt);
+                jRadioButtonGitActionPerformed(evt);
             }
         });
-        getContentPane().add(jRadioButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 40, -1, -1));
+        getContentPane().add(jRadioButtonGit, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 30, -1, -1));
 
-        buttonGroup1.add(jRadioButton2);
-        jRadioButton2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jRadioButton2.setSelected(true);
-        jRadioButton2.setText("Mysql");
-        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(jRadioButtonMysql);
+        jRadioButtonMysql.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jRadioButtonMysql.setText("Mysql");
+        jRadioButtonMysql.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton2ActionPerformed(evt);
+                jRadioButtonMysqlActionPerformed(evt);
             }
         });
-        getContentPane().add(jRadioButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 40, -1, -1));
+        getContentPane().add(jRadioButtonMysql, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 30, -1, -1));
 
         jComboBoxComponente.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         getContentPane().add(jComboBoxComponente, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 260, -1));
 
-        buttonGroup2.add(jRadioButton3);
-        jRadioButton3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jRadioButton3.setSelected(true);
-        jRadioButton3.setText("Modo Normal");
-        getContentPane().add(jRadioButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 160, -1, -1));
+        buttonGroup2.add(jRadioButtonNormal);
+        jRadioButtonNormal.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jRadioButtonNormal.setSelected(true);
+        jRadioButtonNormal.setText("Modo Normal");
+        getContentPane().add(jRadioButtonNormal, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 160, -1, -1));
 
-        buttonGroup2.add(jRadioButton4);
-        jRadioButton4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jRadioButton4.setText("Modo Decaimento");
-        getContentPane().add(jRadioButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 160, -1, -1));
+        buttonGroup2.add(jRadioButtonDecaimento);
+        jRadioButtonDecaimento.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jRadioButtonDecaimento.setText("Modo Decaimento");
+        getContentPane().add(jRadioButtonDecaimento, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 160, -1, -1));
 
         jMenuBar1.setMinimumSize(new java.awt.Dimension(56, 31));
         jMenuBar1.setPreferredSize(new java.awt.Dimension(396, 31));
@@ -180,81 +156,109 @@ public class JFramePrincipal extends javax.swing.JFrame {
         });
         jMenuBar1.add(jMenuCriarBase);
 
+        jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/ehrickwilliam/icon/136.png"))); // NOI18N
+        jMenu1.setText("Importar Usuários");
+        jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu1MouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/ehrickwilliam/icon/026.png"))); // NOI18N
+        jMenu2.setText("Importar Issues");
+        jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu2MouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenu2);
+
+        jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/ehrickwilliam/icon/042.png"))); // NOI18N
+        jMenu3.setText("Importar Comments");
+        jMenuBar1.add(jMenu3);
+
         setJMenuBar(jMenuBar1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuSalvarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuSalvarMouseClicked
-        if (jComboBoxComponente.getSelectedIndex() != -1 && jCheckBoxUser.isSelected()) {
+        if (jComboBoxComponente.getSelectedIndex() != -1) {
             Data.hash.put("componente", jComboBoxComponente.getSelectedItem());
+            Data.hash.put("dataFinal", jFormattedTextFieldFinal.getText());
+            Data.hash.put("dataInicial", jFormattedTextFieldInicial.getText());
+            if (jRadioButtonNormal.isSelected()) {
+                Data.hash.put("modo", 0);
+            } else {
+                Data.hash.put("modo", 1);
+            }
+
+            if (jRadioButtonGit.isSelected()) {
+                Data.hash.put("local", 0);
+            } else {
+                Data.hash.put("local", 1);
+            }
             Util.abrirDialogCentralizado(new JDialogLoading(this, true));
-        } else if(jComboBoxComponente.getSelectedIndex() != -1 && !jCheckBoxUser.isSelected() && !jTextFieldNome.getText().isEmpty()) {
-            Data.hash.put("componente", jComboBoxComponente.getSelectedItem());
-            Data.hash.put("usuario", jTextFieldNome.getText());
-            Util.abrirDialogCentralizado(new JDialogLoading(this, true));
-        }else{
+        } else {
             JOptionPane.showMessageDialog(this, "O campo Componente ou Usuário \nprecisa ser preenchido!");
         }
     }//GEN-LAST:event_jMenuSalvarMouseClicked
 
-    private void jCheckBoxUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxUserActionPerformed
-        // TODO add your handling code here:
-        if (jCheckBoxUser.isSelected()) {
-            jTextFieldNome.setEnabled(false);
-        } else {
-            jTextFieldNome.setEnabled(true);
-        }
-    }//GEN-LAST:event_jCheckBoxUserActionPerformed
-
-    private void jTextFieldNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNomeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldNomeActionPerformed
-
-    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+    private void jRadioButtonGitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonGitActionPerformed
         // TODO add your handling code here:
         jLabel2.setText("Informe o caminho do artefato:");
-    }//GEN-LAST:event_jRadioButton1ActionPerformed
+    }//GEN-LAST:event_jRadioButtonGitActionPerformed
 
-    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+    private void jRadioButtonMysqlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonMysqlActionPerformed
         // TODO add your handling code here:
         jLabel2.setText("Informe o nome do componente:");
-    }//GEN-LAST:event_jRadioButton2ActionPerformed
+    }//GEN-LAST:event_jRadioButtonMysqlActionPerformed
 
     private void jMenuCriarBaseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuCriarBaseMouseClicked
         // TODO add your handling code here:
         Util.abrirDialogCentralizado(new JDialogCriacaoBase(this, rootPaneCheckingEnabled));
     }//GEN-LAST:event_jMenuCriarBaseMouseClicked
 
+    private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
+        // TODO add your handling code here:
+        Util.abrirDialogCentralizado(new JDialogImportantoUsuarios(this, rootPaneCheckingEnabled));
+    }//GEN-LAST:event_jMenu1MouseClicked
+
+    private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
+        // TODO add your handling code here:
+        Util.abrirDialogCentralizado(new JDialogImportantoIssues(this, rootPaneCheckingEnabled));
+    }//GEN-LAST:event_jMenu2MouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
-    private javax.swing.JCheckBox jCheckBoxUser;
     private javax.swing.JComboBox jComboBoxComponente;
-    private javax.swing.JFormattedTextField jFormattedTextFieldCpf;
-    private javax.swing.JFormattedTextField jFormattedTextFieldCpf1;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JFormattedTextField jFormattedTextFieldFinal;
+    private javax.swing.JFormattedTextField jFormattedTextFieldInicial;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jMenuCriarBase;
     private javax.swing.JMenu jMenuSalvar;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
-    private javax.swing.JTextField jTextFieldNome;
+    private javax.swing.JRadioButton jRadioButtonDecaimento;
+    private javax.swing.JRadioButton jRadioButtonGit;
+    private javax.swing.JRadioButton jRadioButtonMysql;
+    private javax.swing.JRadioButton jRadioButtonNormal;
     // End of variables declaration//GEN-END:variables
 
     private void popularComboBox() {
 
         String consulta = "SELECT DISTINCT component FROM issues_ext_bugzilla ORDER BY component ASC";
         try {
-            ResultSet componentes = new Leitor().retornoConsultaPessoas(consulta);
+            ResultSet componentes = new Leitor().retornoConsultas(consulta);
             jComboBoxComponente.removeAllItems();
-            while(componentes.next()){
+            while (componentes.next()) {
                 jComboBoxComponente.addItem(componentes.getString("component"));
             }
         } catch (SQLException ex) {

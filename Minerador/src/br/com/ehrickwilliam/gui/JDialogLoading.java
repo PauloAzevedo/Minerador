@@ -169,8 +169,8 @@ public class JDialogLoading extends javax.swing.JDialog {
                     + "issues_ext_bugzilla,issues, people, comments WHERE (people.id = issues.submitted_by "
                     + "OR people.id = issues.assigned_to OR people.id = comments.submitted_by) AND issues.id "
                     + "= comments.issue_id AND issues_ext_bugzilla.issue_id = issues.id AND issues_ext_bugzilla.component = '" + componente + "' AND people.email = '" + email + "'";
-
-            ResultSet retornoConsultaPessoasCount = leitor.retornoConsultaPessoas(consultaCount);
+            
+            ResultSet retornoConsultaPessoasCount = leitor.retornoConsultas(consultaCount);
             retornoConsultaPessoasCount.next();
 
             int count = Integer.parseInt(retornoConsultaPessoasCount.getString("count"));

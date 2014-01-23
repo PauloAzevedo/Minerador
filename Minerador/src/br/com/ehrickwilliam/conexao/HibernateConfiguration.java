@@ -5,7 +5,11 @@
 package br.com.ehrickwilliam.conexao;
 
 
-import br.com.ehrickwilliam.model.Usuarios;
+import br.com.ehrickwilliam.model.Comment;
+import br.com.ehrickwilliam.model.Commit;
+import br.com.ehrickwilliam.model.Conta;
+import br.com.ehrickwilliam.model.Issue;
+import br.com.ehrickwilliam.model.Usuario;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,13 +29,15 @@ public class HibernateConfiguration {
     // Session uma sessão para cada transação ou um conjunto de transações
 
     private static AnnotationConfiguration cfg;
+    
     private static SessionFactory sessionFactory;
+    
     private static String user;
     private static String pass;
     private static String base;
     private static String host;
 
-    public static Session openConnect() {
+    public synchronized static Session openConnect() {
         if (cfg == null) {
             cfg = new AnnotationConfiguration();
             cfg.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
@@ -42,11 +48,15 @@ public class HibernateConfiguration {
             cfg.setProperty("hibernate.show_sql", "true");
             cfg.setProperty("hibernate.connection.autocommit", "true");
 
-            cfg.addAnnotatedClass(Usuarios.class);
+            cfg.addAnnotatedClass(Usuario.class);
+            cfg.addAnnotatedClass(Commit.class);
+            cfg.addAnnotatedClass(Conta.class);
+            cfg.addAnnotatedClass(Issue.class);
+            cfg.addAnnotatedClass(Comment.class);
             
-
             sessionFactory = cfg.buildSessionFactory();
         }
+        
         return sessionFactory.openSession();
     }
 
