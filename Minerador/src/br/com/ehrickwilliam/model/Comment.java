@@ -42,6 +42,14 @@ public class Comment implements Serializable{
         this.issue = issue;
     }
 
+    public Comment(Usuario commitedBy, Issue issue) {
+        this.commitedBy = commitedBy;
+        this.issue = issue;
+    }
+    
+    
+    
+
     public Integer getId() {
         return id;
     }

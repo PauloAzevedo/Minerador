@@ -1,8 +1,6 @@
 package br.com.ehrickwilliam.bibliotecas;
 
 import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Font;
 import java.awt.Image;
 import static java.lang.Thread.sleep;
 import java.math.BigInteger;
@@ -21,7 +19,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -277,5 +274,11 @@ public class Util {
         BigInteger hash = new BigInteger(1, md.digest(senha.getBytes()));
         sen = hash.toString(16);
         return sen;
+    }
+
+    public static Calendar DateToCalendar(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal;
     }
 }

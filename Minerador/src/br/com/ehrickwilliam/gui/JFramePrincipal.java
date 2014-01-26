@@ -176,6 +176,11 @@ public class JFramePrincipal extends javax.swing.JFrame {
 
         jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/ehrickwilliam/icon/042.png"))); // NOI18N
         jMenu3.setText("Importar Comments");
+        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu3MouseClicked(evt);
+            }
+        });
         jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
@@ -229,6 +234,11 @@ public class JFramePrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         Util.abrirDialogCentralizado(new JDialogImportantoIssues(this, rootPaneCheckingEnabled));
     }//GEN-LAST:event_jMenu2MouseClicked
+
+    private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
+        // TODO add your handling code here:
+        Util.abrirDialogCentralizado(new JDialogImportantoComments(this, rootPaneCheckingEnabled));
+    }//GEN-LAST:event_jMenu3MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
