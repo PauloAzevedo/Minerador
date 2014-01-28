@@ -112,6 +112,15 @@ public class JDialogImportantoUsuarios extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     public void retornoConsulta() {
+        try {
+            leitor.listarUsuarios();
+        } catch (SQLException ex) {
+            Logger.getLogger(JDialogImportantoUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(JDialogImportantoUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (GitAPIException ex) {
+            Logger.getLogger(JDialogImportantoUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+        }
         jProgressBar.setIndeterminate(false);
         jProgressBar.setMaximum(leitor.getEmails().size());
         jProgressBar.setStringPainted(true);
@@ -139,16 +148,6 @@ public class JDialogImportantoUsuarios extends javax.swing.JDialog {
                 while (flag == 0) {
 
                     try {
-                        try {
-                            leitor.listarUsuarios();
-                        } catch (IOException ex) {
-                            Logger.getLogger(JDialogImportantoUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (GitAPIException ex) {
-                            Logger.getLogger(JDialogImportantoUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (SQLException ex) {
-                            Logger.getLogger(JDialogImportantoUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-
                         botao.doClick();
                         flag = +1;
 

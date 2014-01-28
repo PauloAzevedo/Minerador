@@ -5,6 +5,7 @@
 package br.com.ehrickwilliam.gui;
 
 import br.com.ehrickwilliam.bibliotecas.Leitor;
+import br.com.ehrickwilliam.bibliotecas.Util;
 import br.com.ehrickwilliam.conexao.Conexao;
 import br.com.ehrickwilliam.conexao.HibernateConfiguration;
 import br.com.ehrickwilliam.conexao.TransactionManager;
@@ -41,8 +42,6 @@ public class JDialogImportantoIssues extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 
-        HibernateConfiguration.setBase("minerador");
-        usuarios = new DaoUsuario().listar("", "id");
         executar(jButtonExecutar);
         jButtonExecutar.setVisible(false);
         jProgressBar.setIndeterminate(true);
@@ -119,7 +118,8 @@ public class JDialogImportantoIssues extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     public void retornoConsulta() {
-
+        HibernateConfiguration.setBase("minerador");
+        usuarios = new DaoUsuario().listar("", "id");
         jProgressBar.setIndeterminate(false);
         jProgressBar.setMaximum(usuarios.size());
         jProgressBar.setStringPainted(true);
@@ -129,13 +129,15 @@ public class JDialogImportantoIssues extends javax.swing.JDialog {
 
             jLabelstatus.setText("Inserindo issues do usuário" + usuario.getConta().getEmail() + " ");
             HibernateConfiguration.setBase("bicho");
-            
+
             try {
-                
+
                 TransactionManager.beginTransaction();
                 HibernateConfiguration.setBase("bicho");
-                String consulta = "SELECT issues.issue, (SELECT email FROM people WHERE people.id= issues.assigned_to) AS assigned "
-                        + "FROM issues,people where submitted_by = people.id AND people.email = '" + usuario.getConta().getEmail() + "';";
+                String consulta = "SELECT issues.issue, issues.submitted_on AS submittedOn,(SELECT email FROM people "
+                        + "WHERE people.id= issues.assigned_to) AS assigned, issues_ext_bugzilla.component "
+                        + "AS component  FROM issues,people, issues_ext_bugzilla where submitted_by = people.id "
+                        + "AND people.email = '" + usuario.getConta().getEmail() + "' AND issues.id = issues_ext_bugzilla.issue_id;";
 
                 conexao = Conexao.getConnection();
                 conexao.createStatement().execute("use " + HibernateConfiguration.getBase());
@@ -144,8 +146,7 @@ public class JDialogImportantoIssues extends javax.swing.JDialog {
                 while (executeQuery.next()) {
                     HibernateConfiguration.setBase("minerador");
                     List<Usuario> obterPorEmail = new DaoUsuario().obterPorEmail(executeQuery.getString("assigned"));
-                    Issue issue = new Issue(usuario, obterPorEmail.get(0), Integer.parseInt(executeQuery.getString("issue")));
-
+                    Issue issue = new Issue(usuario, obterPorEmail.get(0), Integer.parseInt(executeQuery.getString("issue")), Util.DateToCalendar(executeQuery.getDate("submittedOn")), executeQuery.getString("component"));
                     new DaoIssues().persistir2(issue);
 
                 }
@@ -163,13 +164,10 @@ public class JDialogImportantoIssues extends javax.swing.JDialog {
             public void run() {
                 int flag = 0;
                 while (flag == 0) {
-                    try {
-                        sleep(1000);
-                        botao.doClick();
-                        flag = +1;
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(JDialogImportantoIssues.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+
+                    botao.doClick();
+                    flag = +1;
+
                 }
             }
         }.start();

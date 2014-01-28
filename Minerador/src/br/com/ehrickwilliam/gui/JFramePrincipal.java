@@ -113,6 +113,7 @@ public class JFramePrincipal extends javax.swing.JFrame {
 
         buttonGroup1.add(jRadioButtonMysql);
         jRadioButtonMysql.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jRadioButtonMysql.setSelected(true);
         jRadioButtonMysql.setText("Mysql");
         jRadioButtonMysql.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -199,7 +200,7 @@ public class JFramePrincipal extends javax.swing.JFrame {
                 Data.hash.put("modo", 1);
             }
 
-            if (jRadioButtonGit.isSelected()) {
+            if (jRadioButtonMysql.isSelected()) {
                 Data.hash.put("local", 0);
             } else {
                 Data.hash.put("local", 1);

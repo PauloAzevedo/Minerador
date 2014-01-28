@@ -7,6 +7,7 @@
 package br.com.ehrickwilliam.model;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
 import org.hibernate.annotations.Cascade;
 
 /**
@@ -32,6 +34,15 @@ public class Comment implements Serializable{
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     private Issue issue;
+    
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Calendar submittedOn;
+
+    public Comment(Usuario commitedBy, Issue issue, Calendar submittedOn) {
+        this.commitedBy = commitedBy;
+        this.issue = issue;
+        this.submittedOn = submittedOn;
+    }
 
     public Comment() {
     }

@@ -4,15 +4,17 @@
  */
 package br.com.ehrickwilliam.gui;
 
-import br.com.ehrickwilliam.bibliotecas.Leitor;
 import br.com.ehrickwilliam.bibliotecas.Util;
 import br.com.ehrickwilliam.conexao.Data;
 import br.com.ehrickwilliam.conexao.HibernateConfiguration;
-import br.com.ehrickwilliam.daos.DaoUsuarios;
+import br.com.ehrickwilliam.daos.DaoComment;
+import br.com.ehrickwilliam.daos.DaoIssues;
+import br.com.ehrickwilliam.daos.DaoUsuario;
+import br.com.ehrickwilliam.model.Comment;
+import br.com.ehrickwilliam.model.Issue;
+import br.com.ehrickwilliam.model.Usuario;
 import br.com.ehrickwilliam.model.Usuarios;
 import java.awt.Cursor;
-import static java.lang.Thread.sleep;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,22 +34,13 @@ public class JDialogLoading extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    private final Leitor leitor;
-    private List<Usuarios> usuariosContribuicoes;
-    private int STOP_BUTTON;
+    private List<Usuarios> usuarios;
 
     public JDialogLoading(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        this.STOP_BUTTON = 0;
         initComponents();
-        leitor = new Leitor();
-        try {
-            leitor.listarUsuarios();
-        } catch (SQLException ex) {
-            Logger.getLogger(JDialogLoading.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        jProgressBar.setMaximum(leitor.getEmails().size());
         jProgressBar.setStringPainted(true);
+        jProgressBar.setIndeterminate(true);
         jProgressBar.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         jButtonExecutar.setVisible(false);
 
@@ -128,12 +121,8 @@ public class JDialogLoading extends javax.swing.JDialog {
 
     private void jButtonExecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExecutarActionPerformed
         try {
-            Object get = Data.hash.get("componente");
-            retornoConsulta(get.toString());
-            Double calculoTotalExperiencia = calculoTotalExperiencia();
-            calculoExperienciaPorUsuario(calculoTotalExperiencia);
-            this.dispose();
-            Util.abrirDialogCentralizado(new JDialogResultado(null, rootPaneCheckingEnabled));
+
+            retornoConsultaTotal();
 
         } catch (SQLException ex) {
             Logger.getLogger(JDialogLoading.class.getName()).log(Level.SEVERE, null, ex);
@@ -141,9 +130,7 @@ public class JDialogLoading extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonExecutarActionPerformed
 
     private void jMenuPararMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuPararMouseClicked
-        if (Util.mostraMensagemEmTela("Abordar a operação resultará na perca dos dados obtidos até o momento!")) {
-            this.STOP_BUTTON = 1;
-        }
+
     }//GEN-LAST:event_jMenuPararMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -160,35 +147,46 @@ public class JDialogLoading extends javax.swing.JDialog {
     private javax.swing.JSeparator jSeparator1;
     // End of variables declaration//GEN-END:variables
 
-    public void retornoConsulta(String componente) throws SQLException {
+    public void retornoConsultaTotal() throws SQLException {
         jLabelEtapa.setText("Etapa processamento: 1/3");
-//        Object getUsuario = Data.hash.get("usuario");
+        HibernateConfiguration.setBase("minerador");
 
-        for (String email : leitor.getEmails()) {
-            String consultaCount = "SELECT DISTINCT count(comments.id) as count,people.name as nome FROM "
-                    + "issues_ext_bugzilla,issues, people, comments WHERE (people.id = issues.submitted_by "
-                    + "OR people.id = issues.assigned_to OR people.id = comments.submitted_by) AND issues.id "
-                    + "= comments.issue_id AND issues_ext_bugzilla.issue_id = issues.id AND issues_ext_bugzilla.component = '" + componente + "' AND people.email = '" + email + "'";
-            
-            ResultSet retornoConsultaPessoasCount = leitor.retornoConsultas(consultaCount);
-            retornoConsultaPessoasCount.next();
+        jProgressBar.setIndeterminate(false);
+        List<Usuario> listarUsuarios = new DaoUsuario().listar("", "id");
+        jProgressBar.setMaximum(listarUsuarios.size());
 
-            int count = Integer.parseInt(retornoConsultaPessoasCount.getString("count"));
+        List<Issue> listarIssue = new DaoIssues().listar("", "id");
 
-            Usuarios u = new Usuarios(retornoConsultaPessoasCount.getString("nome"), email, (count + 0.0), componente);
+        List<Comment> listarComment = new DaoComment().listar("", "id");
 
-            jProgressBar.setValue(jProgressBar.getValue() + 1);
-            jLabelstatus.setText("Processando usuário: " + email + "");
-            jLabelstatus1.setText("Total de contribuições: " + count);
-            this.setTitle(email);
-            new DaoUsuarios().persistir(u);
+        usuarios = new ArrayList<>();
 
-            if (STOP_BUTTON == 1) {
-                HibernateConfiguration.criarSchema();
-                this.dispose();
-                break;
+        for (Usuario usuario : listarUsuarios) {
+            jLabelstatus.setText("Processando usuario: " + usuario.getConta().getEmail());
+            double count = 0.0;
+
+            for (Issue issue : listarIssue) {
+                if (issue.getSubmittedBy().equals(usuario)) {
+                    count = count + 1;
+                }
             }
+
+            for (Comment comment : listarComment) {
+                if (comment.getCommitedBy().equals(usuario)) {
+                    count = count + 1;
+                }
+            }
+
+            usuarios.add(new Usuarios(null, usuario.getConta().getEmail(), count, ""));
+            jProgressBar.setValue(jProgressBar.getValue() + 1);
         }
+
+        Double calculoTotalExperiencia = calculoTotalExperiencia();
+        List<Usuarios> calculoExperienciaPorUsuario = calculoExperienciaPorUsuario(calculoTotalExperiencia);
+        Data.hash.put("usuarios", calculoExperienciaPorUsuario);
+        this.dispose();
+        Util.abrirDialogCentralizado(new JDialogResultado(null, rootPaneCheckingEnabled));
+
     }
 
     public static void executar(final JButton botao) {
@@ -197,9 +195,7 @@ public class JDialogLoading extends javax.swing.JDialog {
             public void run() {
                 int flag = 0;
                 while (flag == 0) {
-
                     try {
-                        sleep(3000);
                         botao.doClick();
                         flag = +1;
 
@@ -217,42 +213,36 @@ public class JDialogLoading extends javax.swing.JDialog {
     }
 
     public Double calculoTotalExperiencia() {
-        usuariosContribuicoes = new DaoUsuarios().listar("", "email");
+
         Double soma = 0.0;
-        jProgressBar.setMaximum(usuariosContribuicoes.size());
+        jProgressBar.setMaximum(usuarios.size());
         jProgressBar.setValue(0);
         jLabelEtapa.setText("Etapa calculo de experiencia: 2/3");
-        for (Usuarios usuarios : usuariosContribuicoes) {
-
-            soma = soma + usuarios.getContribuicao();
-            this.setTitle(usuarios.getEmail());
+        for (Usuarios usu : usuarios) {
+            soma = soma + usu.getContribuicao();
+            this.setTitle(usu.getEmail());
             jProgressBar.setValue(jProgressBar.getValue() + 1);
-            jLabelstatus.setText("Processando usuário: " + usuarios.getEmail() + "");
+            jLabelstatus.setText("Processando usuário: " + usu.getEmail() + "");
             jLabelstatus1.setText("Experiencia acumulada: " + soma);
         }
         return soma;
     }
 
-    public List<Usuarios> calculoExperienciaPorUsuario(Double experienciaTotal) {
+    public List<Usuarios> calculoExperienciaPorUsuario(double exp) {
         List<Usuarios> usuariosProcessados = new ArrayList();
         Double soma = 0.0;
-        jProgressBar.setMaximum(usuariosContribuicoes.size());
+        jProgressBar.setMaximum(usuarios.size());
         jProgressBar.setValue(0);
         jLabelEtapa.setText("Etapa calculo de experiencia do usuario: 3/3");
-        for (Usuarios usuarios : usuariosContribuicoes) {
+        for (Usuarios usu : usuarios) {
 
-            this.setTitle(usuarios.getEmail());
+            this.setTitle(usu.getEmail());
             jProgressBar.setValue(jProgressBar.getValue() + 1);
-            jLabelstatus.setText("Processando usuário: " + usuarios.getEmail() + "");
-            soma = calcularExperiencia(usuarios.getContribuicao(), experienciaTotal);
+            jLabelstatus.setText("Processando usuário: " + usu.getEmail() + "");
+            soma = calcularExperiencia(usu.getContribuicao(), exp);
             jLabelstatus1.setText("Experiencia do usuário: " + soma);
-            usuarios.setContribuicao(soma);
-            new DaoUsuarios().persistir(usuarios);
-            usuariosProcessados.add(usuarios);
-        }
-
-        for (Usuarios usuarios : usuariosProcessados) {
-            System.out.println(usuarios);
+            usu.setContribuicao(soma);
+            usuariosProcessados.add(usu);
         }
         return usuariosProcessados;
     }

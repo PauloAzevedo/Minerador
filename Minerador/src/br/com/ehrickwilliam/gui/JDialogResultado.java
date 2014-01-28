@@ -4,9 +4,11 @@
  */
 package br.com.ehrickwilliam.gui;
 
+import br.com.ehrickwilliam.conexao.Data;
 import br.com.ehrickwilliam.conexao.TransactionManager;
 import br.com.ehrickwilliam.daos.DaoUsuarios;
 import br.com.ehrickwilliam.model.Usuarios;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
@@ -20,7 +22,7 @@ public class JDialogResultado extends javax.swing.JDialog {
      * Creates new form JDialogPesquisaCliente
      */
     private DefaultTableModel model;
-    private String styleModelUsuarios[] = new String[]{"Artefato", "Contribuição", "E-mail", "Nome"};
+    private String styleModelUsuarios[] = new String[]{"Artefato", "Contribuição", "E-mail"};
     private List<Usuarios> usuarios;
 
     public JDialogResultado(java.awt.Frame parent, boolean modal) {
@@ -41,8 +43,6 @@ public class JDialogResultado extends javax.swing.JDialog {
         buttonGroup1 = new javax.swing.ButtonGroup();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableCliente = new javax.swing.JTable();
-        jTextFieldNome = new javax.swing.JTextField();
-        jLabel16 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu6 = new javax.swing.JMenu();
 
@@ -79,18 +79,7 @@ public class JDialogResultado extends javax.swing.JDialog {
         ));
         jScrollPane1.setViewportView(jTableCliente);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 590, 250));
-
-        jTextFieldNome.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTextFieldNomeKeyReleased(evt);
-            }
-        });
-        getContentPane().add(jTextFieldNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, 590, -1));
-
-        jLabel16.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel16.setText("Nome:");
-        getContentPane().add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 610, 350));
 
         jMenuBar1.setMinimumSize(new java.awt.Dimension(569, 310));
         jMenuBar1.setPreferredSize(new java.awt.Dimension(396, 31));
@@ -115,26 +104,21 @@ public class JDialogResultado extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_jMenu6MouseClicked
 
-    private void jTextFieldNomeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldNomeKeyReleased
-        // TODO add your handling code here:
-          obterPorNome();
-    }//GEN-LAST:event_jTextFieldNomeKeyReleased
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JLabel jLabel16;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableCliente;
-    private javax.swing.JTextField jTextFieldNome;
     // End of variables declaration//GEN-END:variables
 
     private void popularTabela() {
-        TransactionManager.beginTransaction();
-        usuarios = new DaoUsuarios().obterTodos();
-        TransactionManager.commit();
+        
+        usuarios = (List<Usuarios>) Data.hash.get("usuarios");
+                
+        Collections.sort(usuarios,Usuarios.POR_CONTRIBUICAO);
+        Collections.reverse(usuarios);
 
         prencherPessoasTabela();
     }
@@ -143,9 +127,11 @@ public class JDialogResultado extends javax.swing.JDialog {
         if (usuarios != null && !usuarios.isEmpty()) {
             model = new DefaultTableModel();
             model.setColumnIdentifiers(styleModelUsuarios);
-            for (Usuarios usuario : usuarios) {
-                model.addRow(new Object[]{usuario.getArtefatoContribuicao(), usuario.getContribuicao().toString(), usuario.getEmail(), usuario.getNome()});
+            
+            for (int i = 0; i < 20; i++) {
+                model.addRow(new Object[]{usuarios.get(i).getArtefatoContribuicao(), usuarios.get(i).getContribuicao().toString(), usuarios.get(i).getEmail()}); 
             }
+           
             jTableCliente.setModel(model);
         } else {
             model = new DefaultTableModel();
@@ -153,12 +139,5 @@ public class JDialogResultado extends javax.swing.JDialog {
             jTableCliente.setModel(model);
         }
 
-    }
-
-    private void obterPorNome() {
-        TransactionManager.beginTransaction();
-        usuarios = new DaoUsuarios().obterNome(jTextFieldNome.getText());
-        TransactionManager.commit();
-        prencherPessoasTabela();
     }
 }

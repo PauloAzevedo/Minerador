@@ -7,6 +7,7 @@
 package br.com.ehrickwilliam.model;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
 import org.hibernate.annotations.Cascade;
 
 /**
@@ -36,6 +38,27 @@ public class Issue implements Serializable{
     private Usuario assignedTo;
     
     private int issue;
+    
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Calendar submittedOn;
+
+    private String ferramenta;
+
+    public String getFerramenta() {
+        return ferramenta;
+    }
+
+    public void setFerramenta(String ferramenta) {
+        this.ferramenta = ferramenta;
+    }
+    
+    public Calendar getSubmittedOn() {
+        return submittedOn;
+    }
+
+    public void setSubmittedOn(Calendar submittedOn) {
+        this.submittedOn = submittedOn;
+    }
 
     public int getIssue() {
         return issue;
@@ -58,6 +81,29 @@ public class Issue implements Serializable{
         this.submittedBy = submittedBy;
         this.assignedTo = assignedTo;
         this.issue = issue;
+    }
+
+    public Issue(Integer id, Usuario submittedBy, Usuario assignedTo, int issue, Calendar submittedOn) {
+        this.id = id;
+        this.submittedBy = submittedBy;
+        this.assignedTo = assignedTo;
+        this.issue = issue;
+        this.submittedOn = submittedOn;
+    }
+
+    public Issue(Usuario submittedBy, Usuario assignedTo, int issue, Calendar submittedOn) {
+        this.submittedBy = submittedBy;
+        this.assignedTo = assignedTo;
+        this.issue = issue;
+        this.submittedOn = submittedOn;
+    }
+
+    public Issue(Usuario submittedBy, Usuario assignedTo, int issue, Calendar submittedOn, String ferramenta) {
+        this.submittedBy = submittedBy;
+        this.assignedTo = assignedTo;
+        this.issue = issue;
+        this.submittedOn = submittedOn;
+        this.ferramenta = ferramenta;
     }
     
     public Integer getId() {

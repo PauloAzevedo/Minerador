@@ -7,6 +7,7 @@
 package br.com.ehrickwilliam.model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,6 +23,13 @@ public class Usuarios implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    public static final Comparator<Usuarios> POR_CONTRIBUICAO = new Comparator<Usuarios>() {
+
+        @Override
+        public int compare(Usuarios t, Usuarios t1) {
+          return t.contribuicao.compareTo(t1.contribuicao);
+        }
+    };
     private String nome;
     private String email;
     private Double contribuicao;
@@ -31,6 +39,18 @@ public class Usuarios implements Serializable{
         return id;
     }
 
+    public Usuarios() {
+    }
+
+    public Usuarios(String nome, String email, Double contribuicao, String artefatoContribuicao) {
+        this.nome = nome;
+        this.email = email;
+        this.contribuicao = contribuicao;
+        this.artefatoContribuicao = artefatoContribuicao;
+    }
+
+    
+    
     public void setId(Integer id) {
         this.id = id;
     }
@@ -67,20 +87,10 @@ public class Usuarios implements Serializable{
         this.artefatoContribuicao = artefatoContribuicao;
     }
 
-    public Usuarios() {
-    }
-
-    public Usuarios(String nome, String email, Double contribuicao, String artefatoContribuicao) {
-        this.nome = nome;
-        this.email = email;
-        this.contribuicao = contribuicao;
-        this.artefatoContribuicao = artefatoContribuicao;
-    }
 
     @Override
     public String toString() {
         return "Usuarios{" + "id=" + id + ", nome=" + nome + ", email=" + email + ", contribuicao=" + contribuicao + ", artefatoContribuicao=" + artefatoContribuicao + '}';
     }
-    
-    
+
 }

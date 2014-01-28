@@ -10,6 +10,7 @@ import br.com.ehrickwilliam.model.Commit;
 import br.com.ehrickwilliam.model.Conta;
 import br.com.ehrickwilliam.model.Issue;
 import br.com.ehrickwilliam.model.Usuario;
+import br.com.ehrickwilliam.model.Usuarios;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -47,12 +48,13 @@ public class HibernateConfiguration {
             cfg.setProperty("hibernate.connection.url", "jdbc:mysql://" + host + "/" + base);
             cfg.setProperty("hibernate.show_sql", "true");
             cfg.setProperty("hibernate.connection.autocommit", "true");
-
+//
             cfg.addAnnotatedClass(Usuario.class);
             cfg.addAnnotatedClass(Commit.class);
             cfg.addAnnotatedClass(Conta.class);
             cfg.addAnnotatedClass(Issue.class);
             cfg.addAnnotatedClass(Comment.class);
+            cfg.addAnnotatedClass(Usuarios.class);
             
             sessionFactory = cfg.buildSessionFactory();
         }

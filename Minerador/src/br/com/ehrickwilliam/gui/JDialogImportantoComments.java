@@ -43,7 +43,7 @@ public class JDialogImportantoComments extends javax.swing.JDialog {
     private Leitor leitor;
     private Connection conexao;
     private List<Comment_sample> retorno;
-
+    
     public JDialogImportantoComments(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -52,7 +52,7 @@ public class JDialogImportantoComments extends javax.swing.JDialog {
         jButtonExecutar.setVisible(false);
         jProgressBar.setIndeterminate(true);
         this.setTitle("Importando Comentarios...");
-
+        
     }
 
     /**
@@ -127,45 +127,45 @@ public class JDialogImportantoComments extends javax.swing.JDialog {
         HibernateConfiguration.setBase("minerador");
         usuarios = new DaoUsuario().listar("", "id");
         issues = new DaoIssues().listar("", "id");
-
+        
         try {
-
+            
             HibernateConfiguration.setBase("bicho");
             String consulta = "SELECT comments.id, comments.submitted_on AS envio, people.email, issues.issue AS issue FROM comments,people,issues WHERE comments.submitted_by = people.id AND issues.id = comments.issue_id;";
-
+            
             conexao = Conexao.getConnection();
             conexao.createStatement().execute("use " + HibernateConfiguration.getBase());
             ResultSet executeQuery = conexao.createStatement().executeQuery(consulta);
-
+            
             while (executeQuery.next()) {
-
+                
                 Comment_sample sample = new Comment_sample(executeQuery.getInt("id"),
                         Util.DateToCalendar(executeQuery.getDate("envio")), executeQuery.getString("email"), executeQuery.getString("issue"));
-
+                
                 retorno.add(sample);
-
+                
             }
-
+            
         } catch (SQLException ex) {
             System.out.println(ex);
         }
-
+        
         jProgressBar.setIndeterminate(false);
         jProgressBar.setMaximum(retorno.size());
         jProgressBar.setStringPainted(true);
         jProgressBar.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
+        
         for (Comment_sample samp : retorno) {
-
+            
             for (Usuario usu : usuarios) {
                 if (samp.getEmail().equals(usu.getConta().getEmail())) {
-
+                    
                     for (Issue issu : issues) {
-
+                        
                         if (issu.getIssue() == Integer.parseInt(samp.getIssue())) {
                             System.out.println(issu);
                             HibernateConfiguration.setBase("minerador");
-                            new DaoComment().persistir2(new Comment(usu, issu));
+                            new DaoComment().persistir2(new Comment(usu, issu, samp.getData()));
                         }
                     }
                 }
@@ -173,7 +173,7 @@ public class JDialogImportantoComments extends javax.swing.JDialog {
             jProgressBar.setValue(jProgressBar.getValue() + 1);
         }
     }
-
+    
     public static void executar(final JButton botao) {
         new Thread() {
             @Override
@@ -190,6 +190,6 @@ public class JDialogImportantoComments extends javax.swing.JDialog {
                 }
             }
         }.start();
-
+        
     }
 }
