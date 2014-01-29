@@ -133,9 +133,8 @@ public class Issue implements Serializable{
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 53 * hash + Objects.hashCode(this.id);
-        hash = 53 * hash + Objects.hashCode(this.submittedBy);
-        hash = 53 * hash + Objects.hashCode(this.assignedTo);
+        hash = 97 * hash + Objects.hashCode(this.id);
+        hash = 97 * hash + this.issue;
         return hash;
     }
 
@@ -151,14 +150,13 @@ public class Issue implements Serializable{
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
-        if (!Objects.equals(this.submittedBy, other.submittedBy)) {
-            return false;
-        }
-        if (!Objects.equals(this.assignedTo, other.assignedTo)) {
+        if (this.issue != other.issue) {
             return false;
         }
         return true;
     }
+
+
 
     @Override
     public String toString() {

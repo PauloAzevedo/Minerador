@@ -35,6 +35,11 @@ public class JDialogLoading extends javax.swing.JDialog {
      * @param modal
      */
     private List<Usuarios> usuarios;
+    private final String dataInicial;
+    private final String dataFinal;
+    private final String componente;
+    private final String modo;
+    private final String local;
 
     public JDialogLoading(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -43,7 +48,12 @@ public class JDialogLoading extends javax.swing.JDialog {
         jProgressBar.setIndeterminate(true);
         jProgressBar.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         jButtonExecutar.setVisible(false);
-
+        
+        local = Data.hash.get("local").toString();
+        modo = Data.hash.get("modo").toString();
+        dataInicial = Data.hash.get("dataInicial").toString();
+        dataFinal = Data.hash.get("dataFinal").toString();
+        componente = Data.hash.get("componente").toString();
         executar(jButtonExecutar);
 
     }
@@ -121,8 +131,13 @@ public class JDialogLoading extends javax.swing.JDialog {
 
     private void jButtonExecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExecutarActionPerformed
         try {
-
-            retornoConsultaTotal();
+            switch (local) {
+                case "0":
+                    retornoConsultaTotal();
+                    break;
+                case "1":
+                    break;
+            }
 
         } catch (SQLException ex) {
             Logger.getLogger(JDialogLoading.class.getName()).log(Level.SEVERE, null, ex);
@@ -150,14 +165,26 @@ public class JDialogLoading extends javax.swing.JDialog {
     public void retornoConsultaTotal() throws SQLException {
         jLabelEtapa.setText("Etapa processamento: 1/3");
         HibernateConfiguration.setBase("minerador");
-
         jProgressBar.setIndeterminate(false);
         List<Usuario> listarUsuarios = new DaoUsuario().listar("", "id");
         jProgressBar.setMaximum(listarUsuarios.size());
-
-        List<Issue> listarIssue = new DaoIssues().listar("", "id");
-
-        List<Comment> listarComment = new DaoComment().listar("", "id");
+        List<Issue> listarIssue;
+        List<Comment> listarComment = new ArrayList<>();
+        if(!"".equals(componente) && componente != null && !"  /  /    ".equals(dataInicial)){
+            
+           listarIssue = new DaoIssues().obterPorComponente(componente);
+           
+            for (Issue issueLista : listarIssue) {
+               List<Comment> obterPorIssue = new DaoComment().obterPorIssue(issueLista);
+                for (Comment comment : obterPorIssue) {
+                    listarComment.add(comment);
+                }
+            }
+            
+        }else{
+           listarIssue = new DaoIssues().listar("", "id");
+           listarComment = new DaoComment().listar("", "id");
+        }
 
         usuarios = new ArrayList<>();
 
@@ -184,6 +211,7 @@ public class JDialogLoading extends javax.swing.JDialog {
         Double calculoTotalExperiencia = calculoTotalExperiencia();
         List<Usuarios> calculoExperienciaPorUsuario = calculoExperienciaPorUsuario(calculoTotalExperiencia);
         Data.hash.put("usuarios", calculoExperienciaPorUsuario);
+     
         this.dispose();
         Util.abrirDialogCentralizado(new JDialogResultado(null, rootPaneCheckingEnabled));
 

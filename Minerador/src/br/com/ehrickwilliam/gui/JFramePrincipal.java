@@ -83,6 +83,7 @@ public class JFramePrincipal extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        jFormattedTextFieldInicial.setText("01/01/2010");
         getContentPane().add(jFormattedTextFieldInicial, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 260, -1));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
@@ -195,15 +196,15 @@ public class JFramePrincipal extends javax.swing.JFrame {
             Data.hash.put("dataFinal", jFormattedTextFieldFinal.getText());
             Data.hash.put("dataInicial", jFormattedTextFieldInicial.getText());
             if (jRadioButtonNormal.isSelected()) {
-                Data.hash.put("modo", 0);
+                Data.hash.put("modo", "0");
             } else {
-                Data.hash.put("modo", 1);
+                Data.hash.put("modo", "1");
             }
 
             if (jRadioButtonMysql.isSelected()) {
-                Data.hash.put("local", 0);
-            } else {
-                Data.hash.put("local", 1);
+                Data.hash.put("local", "0");
+            } else if(jRadioButtonGit.isSelected()) {
+                Data.hash.put("local", "1");
             }
             Util.abrirDialogCentralizado(new JDialogLoading(this, true));
         } else {
@@ -269,6 +270,7 @@ public class JFramePrincipal extends javax.swing.JFrame {
         try {
             ResultSet componentes = new Leitor().retornoConsultas(consulta);
             jComboBoxComponente.removeAllItems();
+            jComboBoxComponente.addItem("");
             while (componentes.next()) {
                 jComboBoxComponente.addItem(componentes.getString("component"));
             }
