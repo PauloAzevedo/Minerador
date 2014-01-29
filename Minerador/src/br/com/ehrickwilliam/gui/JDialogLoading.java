@@ -48,7 +48,7 @@ public class JDialogLoading extends javax.swing.JDialog {
         jProgressBar.setIndeterminate(true);
         jProgressBar.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         jButtonExecutar.setVisible(false);
-        
+
         local = Data.hash.get("local").toString();
         modo = Data.hash.get("modo").toString();
         dataInicial = Data.hash.get("dataInicial").toString();
@@ -170,20 +170,20 @@ public class JDialogLoading extends javax.swing.JDialog {
         jProgressBar.setMaximum(listarUsuarios.size());
         List<Issue> listarIssue;
         List<Comment> listarComment = new ArrayList<>();
-        if(!"".equals(componente) && componente != null && !"  /  /    ".equals(dataInicial)){
-            
-           listarIssue = new DaoIssues().obterPorComponente(componente);
-           
+        if (!"".equals(componente) && componente != null) {
+
+            listarIssue = new DaoIssues().obterPorComponente(componente,dataInicial,dataFinal);
+
             for (Issue issueLista : listarIssue) {
-               List<Comment> obterPorIssue = new DaoComment().obterPorIssue(issueLista);
+                List<Comment> obterPorIssue = new DaoComment().obterPorIssue(issueLista);
                 for (Comment comment : obterPorIssue) {
                     listarComment.add(comment);
                 }
             }
-            
-        }else{
-           listarIssue = new DaoIssues().listar("", "id");
-           listarComment = new DaoComment().listar("", "id");
+
+        } else {
+            listarIssue = new DaoIssues().listar("", "id");
+            listarComment = new DaoComment().listar("", "id");
         }
 
         usuarios = new ArrayList<>();
@@ -211,7 +211,7 @@ public class JDialogLoading extends javax.swing.JDialog {
         Double calculoTotalExperiencia = calculoTotalExperiencia();
         List<Usuarios> calculoExperienciaPorUsuario = calculoExperienciaPorUsuario(calculoTotalExperiencia);
         Data.hash.put("usuarios", calculoExperienciaPorUsuario);
-     
+
         this.dispose();
         Util.abrirDialogCentralizado(new JDialogResultado(null, rootPaneCheckingEnabled));
 

@@ -30,7 +30,8 @@ public class JFramePrincipal extends javax.swing.JFrame {
             System.out.println(ex);
         }
         initComponents();
-
+        jFormattedTextFieldFinal.setText(null);
+        jFormattedTextFieldInicial.setText(null);
         HibernateConfiguration.setBase("bicho");
         HibernateConfiguration.setHost("localhost");
         HibernateConfiguration.setUser("root");
@@ -83,7 +84,6 @@ public class JFramePrincipal extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        jFormattedTextFieldInicial.setText("01/01/2010");
         getContentPane().add(jFormattedTextFieldInicial, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 260, -1));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
@@ -95,7 +95,6 @@ public class JFramePrincipal extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        jFormattedTextFieldFinal.setText("31/12/2012");
         getContentPane().add(jFormattedTextFieldFinal, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 100, 280, -1));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
