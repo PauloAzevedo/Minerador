@@ -4,25 +4,35 @@
  */
 package br.com.ehrickwilliam.gui;
 
-import br.com.ehrickwilliam.bibliotecas.Leitor;
 import br.com.ehrickwilliam.conexao.HibernateConfiguration;
-import br.com.ehrickwilliam.conexao.TransactionManager;
-import br.com.ehrickwilliam.daos.DaoUsuario;
-import br.com.ehrickwilliam.model.Conta;
-import br.com.ehrickwilliam.model.Usuario;
+import br.com.ehrickwilliam.daos.DaoCommit;
+import br.com.ehrickwilliam.model.Artefato;
+import br.com.ehrickwilliam.model.ArtefatoMap;
+import br.com.ehrickwilliam.model.Commit;
 import java.awt.Cursor;
+import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
-import org.eclipse.jgit.api.errors.GitAPIException;
+import javax.swing.JOptionPane;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.RawTextComparator;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.util.io.DisabledOutputStream;
 
 /**
  *
  * @author Erick
  */
-public class JDialogImportantoUsuarios extends javax.swing.JDialog {
+public class JDialogImportantoArtefatos extends javax.swing.JDialog {
 
     /**
      * Creates new form JDialogCadastroClienteFisico
@@ -30,16 +40,17 @@ public class JDialogImportantoUsuarios extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    private final Leitor leitor;
+    private List<Commit> commits;
 
-    public JDialogImportantoUsuarios(java.awt.Frame parent, boolean modal) {
+
+    public JDialogImportantoArtefatos(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+
+        executar(jButtonExecutar);
         jButtonExecutar.setVisible(false);
-        leitor = new Leitor();
         jProgressBar.setIndeterminate(true);
-        this.setTitle("Importando usuários...");
-        executar(jButtonExecutar, leitor);
+        this.setTitle("Importando Artefatos...");
 
     }
 
@@ -112,49 +123,65 @@ public class JDialogImportantoUsuarios extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     public void retornoConsulta() {
+        List<Artefato> total = new ArrayList();
         try {
-            leitor.listarUsuarios();
-            
+            HibernateConfiguration.setBase("minerador");
+            FileRepositoryBuilder builder = new FileRepositoryBuilder();
+            Repository repository = builder.setGitDir(new File("D:\\Nova pasta\\GitHub\\core\\.git"))
+                    .readEnvironment()
+                    .findGitDir()
+                    .build();
+            commits = new DaoCommit().listar("", "id");
             jProgressBar.setIndeterminate(false);
-            jProgressBar.setMaximum(leitor.getEmails().size());
+            jProgressBar.setMaximum(commits.size());
             jProgressBar.setStringPainted(true);
             jProgressBar.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            
-            HibernateConfiguration.setBase("minerador");
-            for (String email : leitor.getEmails()) {
-                Conta conta = new Conta(email, null);
-                Usuario usuario = new Usuario();
-                usuario.setConta(conta);
-                TransactionManager.beginTransaction();
-                
-                new DaoUsuario().persistir(usuario);
-                TransactionManager.commit();
-                jLabelstatus.setText("Inserindo " + email + " ");
+            int count = 0;
+            for (Commit string : commits) {
+                jLabelstatus.setText("COMMIT ID: " + string.getCommit());
+
+                ObjectId revid = repository.resolve(string.getCommit());
+                RevWalk revWalk = new RevWalk(repository);
+                RevCommit commit = revWalk.parseCommit(revid);
+                RevWalk rw = new RevWalk(repository);
+                if(commit.getParentCount() > 0){
+                RevCommit parent = rw.parseCommit(commit.getParent(0).getId());
+                DiffFormatter df = new DiffFormatter(DisabledOutputStream.INSTANCE);
+                df.setRepository(repository);
+                df.setDiffComparator(RawTextComparator.DEFAULT);
+                df.setDetectRenames(true);
+                List<DiffEntry> diffs = df.scan(parent.getTree(), commit.getTree());
+
+                for (DiffEntry diff : diffs) {
+                    String[] split = diff.getNewPath().split("/");
+                    if (split[0] != null && !"".equals(split[0]) && split[0].indexOf(".") == -1) {
+                        if (split.length > 1) {
+                            jLabelstatus1.setText(diff.getNewPath());
+                            //new DaoArtefato().persistir(new Artefato(diff.getNewPath(), ArtefatoMap.verificarComponenteDoArtefato(split[0]), string));
+                            count++;
+                            total.add(new Artefato(diff.getNewPath(), ArtefatoMap.verificarComponenteDoArtefato(split[0]), string));
+                        }
+                    }
+                }
+                }
                 jProgressBar.setValue(jProgressBar.getValue() + 1);
+                
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(JDialogImportantoUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+
+            JOptionPane.showMessageDialog(this, count);
         } catch (IOException ex) {
-            Logger.getLogger(JDialogImportantoUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (GitAPIException ex) {
-            Logger.getLogger(JDialogImportantoUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(JDialogImportantoArtefatos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public static void executar(final JButton botao, final Leitor leitor) {
+    public static void executar(final JButton botao) {
         new Thread() {
             @Override
             public void run() {
                 int flag = 0;
                 while (flag == 0) {
-
-                    try {
-                        botao.doClick();
-                        flag = +1;
-
-                    } catch (Exception e) {
-                        System.out.println(e);
-                    }
+                    botao.doClick();
+                    flag = +1;
                 }
             }
         }.start();

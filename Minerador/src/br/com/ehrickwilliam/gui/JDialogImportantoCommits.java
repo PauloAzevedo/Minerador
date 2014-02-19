@@ -4,25 +4,31 @@
  */
 package br.com.ehrickwilliam.gui;
 
-import br.com.ehrickwilliam.bibliotecas.Leitor;
+import br.com.ehrickwilliam.bibliotecas.Util;
 import br.com.ehrickwilliam.conexao.HibernateConfiguration;
-import br.com.ehrickwilliam.conexao.TransactionManager;
+import br.com.ehrickwilliam.daos.DaoCommit;
 import br.com.ehrickwilliam.daos.DaoUsuario;
-import br.com.ehrickwilliam.model.Conta;
+import br.com.ehrickwilliam.model.Commit;
 import br.com.ehrickwilliam.model.Usuario;
 import java.awt.Cursor;
+import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.sql.Connection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
+import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 /**
  *
  * @author Erick
  */
-public class JDialogImportantoUsuarios extends javax.swing.JDialog {
+public class JDialogImportantoCommits extends javax.swing.JDialog {
 
     /**
      * Creates new form JDialogCadastroClienteFisico
@@ -30,16 +36,17 @@ public class JDialogImportantoUsuarios extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    private final Leitor leitor;
+    private List<Usuario> usuarios;
+    private Connection conexao;
 
-    public JDialogImportantoUsuarios(java.awt.Frame parent, boolean modal) {
+    public JDialogImportantoCommits(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+
+        executar(jButtonExecutar);
         jButtonExecutar.setVisible(false);
-        leitor = new Leitor();
         jProgressBar.setIndeterminate(true);
-        this.setTitle("Importando usuários...");
-        executar(jButtonExecutar, leitor);
+        this.setTitle("Importando Commits...");
 
     }
 
@@ -112,49 +119,53 @@ public class JDialogImportantoUsuarios extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     public void retornoConsulta() {
-        try {
-            leitor.listarUsuarios();
-            
-            jProgressBar.setIndeterminate(false);
-            jProgressBar.setMaximum(leitor.getEmails().size());
-            jProgressBar.setStringPainted(true);
-            jProgressBar.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            
-            HibernateConfiguration.setBase("minerador");
-            for (String email : leitor.getEmails()) {
-                Conta conta = new Conta(email, null);
-                Usuario usuario = new Usuario();
-                usuario.setConta(conta);
-                TransactionManager.beginTransaction();
-                
-                new DaoUsuario().persistir(usuario);
-                TransactionManager.commit();
-                jLabelstatus.setText("Inserindo " + email + " ");
+        HibernateConfiguration.setBase("minerador");
+        usuarios = new DaoUsuario().listar("", "id");
+        jProgressBar.setIndeterminate(false);
+        jProgressBar.setMaximum(usuarios.size());
+        jProgressBar.setStringPainted(true);
+        jProgressBar.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+        for (Usuario usuario : usuarios) {
+            try {
+                jLabelstatus.setText("Inserindo commits do usuário " + usuario.getConta().getEmail() + " ");
+                FileRepositoryBuilder builder = new FileRepositoryBuilder();
+                Repository repository = builder.setGitDir(new File("D:\\Nova pasta\\GitHub\\core\\.git"))
+                        .readEnvironment()
+                        .findGitDir()
+                        .build();
+
+                Git git = new Git(repository);
+
+                Iterable<RevCommit> commits;
+
+                commits = git.log().all().call();
+
+                for (RevCommit commit : commits) {
+                    if (commit.getAuthorIdent().getEmailAddress().equals(usuario.getConta().getEmail())) {
+                        new DaoCommit().persistir(new Commit(usuario, commit.getName(), Util.DateToCalendar(commit.getAuthorIdent().getWhen()), commit.getCommitTime()));
+                    }
+                }
+                repository.close();
                 jProgressBar.setValue(jProgressBar.getValue() + 1);
+            } catch (IOException ex) {
+                Logger.getLogger(JDialogImportantoCommits.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (GitAPIException ex) {
+                Logger.getLogger(JDialogImportantoCommits.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(JDialogImportantoUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(JDialogImportantoUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (GitAPIException ex) {
-            Logger.getLogger(JDialogImportantoUsuarios.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public static void executar(final JButton botao, final Leitor leitor) {
+    public static void executar(final JButton botao) {
         new Thread() {
             @Override
             public void run() {
                 int flag = 0;
                 while (flag == 0) {
 
-                    try {
-                        botao.doClick();
-                        flag = +1;
+                    botao.doClick();
+                    flag = +1;
 
-                    } catch (Exception e) {
-                        System.out.println(e);
-                    }
                 }
             }
         }.start();

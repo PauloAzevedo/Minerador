@@ -56,7 +56,7 @@ public class Leitor {
         }
         
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
-        Repository repository = builder.setGitDir(new File("C:\\Users\\Erick\\Documents\\GitHub\\core\\.git"))
+        Repository repository = builder.setGitDir(new File("D:\\Nova pasta\\GitHub\\core\\.git"))
                 .readEnvironment()
                 .findGitDir()
                 .build();
@@ -68,6 +68,7 @@ public class Leitor {
        
        
         for (RevCommit commit : commits) {
+            
              String email = commit.getAuthorIdent().getEmailAddress();
             if (!this.emails.contains(email)) {
                 this.emails.add(email);

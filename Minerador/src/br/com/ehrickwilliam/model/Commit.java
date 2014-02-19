@@ -7,6 +7,8 @@
 package br.com.ehrickwilliam.model;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -14,7 +16,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
 import org.hibernate.annotations.Cascade;
 
 /**
@@ -29,15 +33,22 @@ public class Commit implements Serializable{
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     private Usuario commiter;
+    private String commit;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Calendar date;
+    private Integer datetime;
 
     public Commit() {
     }
 
-    public Commit(Integer id, Usuario commiter) {
-        this.id = id;
+    public Commit(Usuario commiter, String commit, Calendar date, Integer datetime) {
+        
         this.commiter = commiter;
+        this.commit = commit;
+        this.date = date;
+        this.datetime = datetime;
     }
-
+    
     public Integer getId() {
         return id;
     }
@@ -54,34 +65,27 @@ public class Commit implements Serializable{
         this.commiter = commiter;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 79 * hash + Objects.hashCode(this.id);
-        hash = 79 * hash + Objects.hashCode(this.commiter);
-        return hash;
+    public String getCommit() {
+        return commit;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Commit other = (Commit) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Objects.equals(this.commiter, other.commiter)) {
-            return false;
-        }
-        return true;
+    public void setCommit(String commit) {
+        this.commit = commit;
     }
 
-    @Override
-    public String toString() {
-        return "Commit{" + "id=" + id + ", commiter=" + commiter + '}';
+    public Calendar getDate() {
+        return date;
     }
+
+    public void setDate(Calendar date) {
+        this.date = date;
+    }
+
+    public Integer getDatetime() {
+        return datetime;
+    }
+
+    public void setDatetime(Integer datetime) {
+        this.datetime = datetime;
+    } 
 }

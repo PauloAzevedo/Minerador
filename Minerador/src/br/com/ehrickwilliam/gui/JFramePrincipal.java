@@ -55,15 +55,13 @@ public class JFramePrincipal extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jFormattedTextFieldFinal = new javax.swing.JFormattedTextField();
         jLabel2 = new javax.swing.JLabel();
-        jRadioButtonGit = new javax.swing.JRadioButton();
-        jRadioButtonMysql = new javax.swing.JRadioButton();
         jComboBoxComponente = new javax.swing.JComboBox();
         jRadioButtonNormal = new javax.swing.JRadioButton();
         jRadioButtonDecaimento = new javax.swing.JRadioButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuSalvar = new javax.swing.JMenu();
-        jMenuCriarBase = new javax.swing.JMenu();
         jMenu1 = new javax.swing.JMenu();
+        jMenuCriarBase = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
 
@@ -77,70 +75,49 @@ public class JFramePrincipal extends javax.swing.JFrame {
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel4.setText("Data Inicíal (não informar utilizara a data da 1º interação) :");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, -1, -1));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, -1, -1));
 
         try {
             jFormattedTextFieldInicial.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        getContentPane().add(jFormattedTextFieldInicial, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 260, -1));
+        getContentPane().add(jFormattedTextFieldInicial, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 260, -1));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel5.setText("Data Final (não informar utilizara a data da ultima interação):");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 80, -1, -1));
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 60, -1, -1));
 
         try {
             jFormattedTextFieldFinal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        getContentPane().add(jFormattedTextFieldFinal, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 100, 280, -1));
+        getContentPane().add(jFormattedTextFieldFinal, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 80, 280, -1));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel2.setText("Informe o nome do componente:");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, -1, 10));
-
-        buttonGroup1.add(jRadioButtonGit);
-        jRadioButtonGit.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jRadioButtonGit.setText("GitHub");
-        jRadioButtonGit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButtonGitActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jRadioButtonGit, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 30, -1, -1));
-
-        buttonGroup1.add(jRadioButtonMysql);
-        jRadioButtonMysql.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jRadioButtonMysql.setSelected(true);
-        jRadioButtonMysql.setText("Mysql");
-        jRadioButtonMysql.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButtonMysqlActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jRadioButtonMysql, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 30, -1, -1));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, -1, 10));
 
         jComboBoxComponente.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        getContentPane().add(jComboBoxComponente, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 260, -1));
+        getContentPane().add(jComboBoxComponente, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 260, -1));
 
         buttonGroup2.add(jRadioButtonNormal);
         jRadioButtonNormal.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jRadioButtonNormal.setSelected(true);
         jRadioButtonNormal.setText("Modo Normal");
-        getContentPane().add(jRadioButtonNormal, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 160, -1, -1));
+        getContentPane().add(jRadioButtonNormal, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 140, -1, -1));
 
         buttonGroup2.add(jRadioButtonDecaimento);
         jRadioButtonDecaimento.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jRadioButtonDecaimento.setText("Modo Decaimento");
-        getContentPane().add(jRadioButtonDecaimento, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 160, -1, -1));
+        getContentPane().add(jRadioButtonDecaimento, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 140, -1, -1));
 
         jMenuBar1.setMinimumSize(new java.awt.Dimension(56, 31));
         jMenuBar1.setPreferredSize(new java.awt.Dimension(396, 31));
 
         jMenuSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/ehrickwilliam/icon/006.png"))); // NOI18N
-        jMenuSalvar.setText("Iniciar");
+        jMenuSalvar.setText("Iniciar Recomendação");
         jMenuSalvar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jMenuSalvarMouseClicked(evt);
@@ -148,17 +125,8 @@ public class JFramePrincipal extends javax.swing.JFrame {
         });
         jMenuBar1.add(jMenuSalvar);
 
-        jMenuCriarBase.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/ehrickwilliam/icon/008.png"))); // NOI18N
-        jMenuCriarBase.setText("Criar Base De Dados");
-        jMenuCriarBase.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenuCriarBaseMouseClicked(evt);
-            }
-        });
-        jMenuBar1.add(jMenuCriarBase);
-
         jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/ehrickwilliam/icon/136.png"))); // NOI18N
-        jMenu1.setText("Importar Usuários");
+        jMenu1.setText("Usuários");
         jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jMenu1MouseClicked(evt);
@@ -166,8 +134,17 @@ public class JFramePrincipal extends javax.swing.JFrame {
         });
         jMenuBar1.add(jMenu1);
 
+        jMenuCriarBase.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/ehrickwilliam/icon/008.png"))); // NOI18N
+        jMenuCriarBase.setText("Commits");
+        jMenuCriarBase.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenuCriarBaseMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenuCriarBase);
+
         jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/ehrickwilliam/icon/026.png"))); // NOI18N
-        jMenu2.setText("Importar Issues");
+        jMenu2.setText("Issues");
         jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jMenu2MouseClicked(evt);
@@ -176,7 +153,7 @@ public class JFramePrincipal extends javax.swing.JFrame {
         jMenuBar1.add(jMenu2);
 
         jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/ehrickwilliam/icon/042.png"))); // NOI18N
-        jMenu3.setText("Importar Comments");
+        jMenu3.setText("Comments");
         jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jMenu3MouseClicked(evt);
@@ -199,31 +176,15 @@ public class JFramePrincipal extends javax.swing.JFrame {
             } else {
                 Data.hash.put("modo", "1");
             }
-
-            if (jRadioButtonMysql.isSelected()) {
-                Data.hash.put("local", "0");
-            } else if(jRadioButtonGit.isSelected()) {
-                Data.hash.put("local", "1");
-            }
             Util.abrirDialogCentralizado(new JDialogLoading(this, true));
         } else {
             JOptionPane.showMessageDialog(this, "O campo Componente ou Usuário \nprecisa ser preenchido!");
         }
     }//GEN-LAST:event_jMenuSalvarMouseClicked
 
-    private void jRadioButtonGitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonGitActionPerformed
-        // TODO add your handling code here:
-        jLabel2.setText("Informe o caminho do artefato:");
-    }//GEN-LAST:event_jRadioButtonGitActionPerformed
-
-    private void jRadioButtonMysqlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonMysqlActionPerformed
-        // TODO add your handling code here:
-        jLabel2.setText("Informe o nome do componente:");
-    }//GEN-LAST:event_jRadioButtonMysqlActionPerformed
-
     private void jMenuCriarBaseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuCriarBaseMouseClicked
         // TODO add your handling code here:
-        Util.abrirDialogCentralizado(new JDialogCriacaoBase(this, rootPaneCheckingEnabled));
+        Util.abrirDialogCentralizado(new JDialogImportantoCommits(this, rootPaneCheckingEnabled));
     }//GEN-LAST:event_jMenuCriarBaseMouseClicked
 
     private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
@@ -258,8 +219,6 @@ public class JFramePrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenuCriarBase;
     private javax.swing.JMenu jMenuSalvar;
     private javax.swing.JRadioButton jRadioButtonDecaimento;
-    private javax.swing.JRadioButton jRadioButtonGit;
-    private javax.swing.JRadioButton jRadioButtonMysql;
     private javax.swing.JRadioButton jRadioButtonNormal;
     // End of variables declaration//GEN-END:variables
 
@@ -269,7 +228,6 @@ public class JFramePrincipal extends javax.swing.JFrame {
         try {
             ResultSet componentes = new Leitor().retornoConsultas(consulta);
             jComboBoxComponente.removeAllItems();
-            jComboBoxComponente.addItem("");
             while (componentes.next()) {
                 jComboBoxComponente.addItem(componentes.getString("component"));
             }

@@ -6,9 +6,9 @@
 package br.com.ehrickwilliam.daos;
 
 import br.com.ehrickwilliam.bibliotecas.Util;
+import br.com.ehrickwilliam.model.Commit;
 import br.com.ehrickwilliam.model.Issue;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 import org.hibernate.Query;
 
@@ -16,15 +16,15 @@ import org.hibernate.Query;
  *
  * @author Erick
  */
-public class DaoIssues extends DaoGenerics<Issue> {
+public class DaoCommit extends DaoGenerics<Commit> {
 
-    public DaoIssues() {
-        super.alvo = Issue.class;
+    public DaoCommit() {
+        super.alvo = Commit.class;
     }
 
-    public List<Issue> obterPorComponente(String text, String inicio, String fim) {
-        List<Issue> lista = null;
-        if (text != null || !"".equals(text)) {
+    public List<Commit> obterPorData(String inicio, String fim) {
+        List<Commit> lista = null;
+
             String primeiroRegistro = "03/08/2010";
             String segundoRegistro = "31/12/2012";
             SimpleDateFormat formatadorLocal = new SimpleDateFormat("yyyy-MM-dd");
@@ -46,30 +46,9 @@ public class DaoIssues extends DaoGenerics<Issue> {
 
             Query query = session.createQuery("From "
                     + alvo.getSimpleName()
-                    + " where ferramenta LIKE '"
-                    + text + "%' AND submittedOn BETWEEN '" + in + "' AND '" + fi + "' ORDER BY ferramenta ASC");
+                    + " where date BETWEEN '" + in + "' AND '" + fi + "' ORDER BY id ASC");
             lista = query.list();
 
-        }
         return lista;
     }
-
-    public List<Issue> obterData(Calendar inicio, Calendar fim) {
-        String primeiroRegistro = "03/08/2010";
-        String segundoRegistro = "03/08/2010";
-        SimpleDateFormat formatadorLocal = new SimpleDateFormat("yyyy-MM-dd");
-        String in = formatadorLocal.format(inicio.getTime());
-        String fi = formatadorLocal.format(fim.getTime());
-
-        primeiroRegistro = formatadorLocal.format(Util.stringToCalendar(primeiroRegistro).getTime());
-        segundoRegistro = formatadorLocal.format(Util.stringToCalendar(segundoRegistro).getTime());
-
-        List<Issue> lista = null;
-        Query query = session.createQuery("From "
-                + alvo.getSimpleName()
-                + " where submittedOn BETWEEN '" + in + "' AND '" + fi + "' ORDER BY ferramenta ASC");
-        lista = query.list();
-        return lista;
-    }
-
 }

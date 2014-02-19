@@ -3,12 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Erick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/model/Issue.java</file>
-            <file>file:/C:/Users/Erick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/model/Comment.java</file>
-            <file>file:/C:/Users/Erick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/gui/JFramePrincipal.java</file>
-            <file>file:/C:/Users/Erick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/daos/DaoComment.java</file>
-            <file>file:/C:/Users/Erick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/gui/JDialogLoading.java</file>
-            <file>file:/C:/Users/Erick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/daos/DaoIssues.java</file>
+            <file>file:/D:/Nova%20pasta/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/gui/JDialogImportantoArtefatos.java</file>
+            <file>file:/D:/Nova%20pasta/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/model/Artefato.java</file>
         </group>
     </open-files>
 </project-private>

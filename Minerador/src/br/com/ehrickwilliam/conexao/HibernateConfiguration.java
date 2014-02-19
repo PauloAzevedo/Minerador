@@ -5,6 +5,7 @@
 package br.com.ehrickwilliam.conexao;
 
 
+import br.com.ehrickwilliam.model.Artefato;
 import br.com.ehrickwilliam.model.Comment;
 import br.com.ehrickwilliam.model.Commit;
 import br.com.ehrickwilliam.model.Conta;
@@ -55,6 +56,8 @@ public class HibernateConfiguration {
             cfg.addAnnotatedClass(Issue.class);
             cfg.addAnnotatedClass(Comment.class);
             cfg.addAnnotatedClass(Usuarios.class);
+            cfg.addAnnotatedClass(Artefato.class);
+            
             
             sessionFactory = cfg.buildSessionFactory();
         }

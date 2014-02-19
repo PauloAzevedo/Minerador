@@ -8,19 +8,34 @@ import br.com.ehrickwilliam.bibliotecas.Util;
 import br.com.ehrickwilliam.conexao.Data;
 import br.com.ehrickwilliam.conexao.HibernateConfiguration;
 import br.com.ehrickwilliam.daos.DaoComment;
+import br.com.ehrickwilliam.daos.DaoCommit;
 import br.com.ehrickwilliam.daos.DaoIssues;
 import br.com.ehrickwilliam.daos.DaoUsuario;
+import br.com.ehrickwilliam.model.Artefato;
+import br.com.ehrickwilliam.model.ArtefatoMap;
 import br.com.ehrickwilliam.model.Comment;
+import br.com.ehrickwilliam.model.Commit;
 import br.com.ehrickwilliam.model.Issue;
 import br.com.ehrickwilliam.model.Usuario;
 import br.com.ehrickwilliam.model.Usuarios;
 import java.awt.Cursor;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.RawTextComparator;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.util.io.DisabledOutputStream;
 
 /**
  *
@@ -39,7 +54,6 @@ public class JDialogLoading extends javax.swing.JDialog {
     private final String dataFinal;
     private final String componente;
     private final String modo;
-    private final String local;
 
     public JDialogLoading(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -49,7 +63,6 @@ public class JDialogLoading extends javax.swing.JDialog {
         jProgressBar.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         jButtonExecutar.setVisible(false);
 
-        local = Data.hash.get("local").toString();
         modo = Data.hash.get("modo").toString();
         dataInicial = Data.hash.get("dataInicial").toString();
         dataFinal = Data.hash.get("dataFinal").toString();
@@ -108,8 +121,6 @@ public class JDialogLoading extends javax.swing.JDialog {
         jLabelstatus1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabelstatus1.setText("Por favor, aguarde...");
         getContentPane().add(jLabelstatus1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
-
-        jLabelEtapa.setText("Etapa restantes: 3");
         getContentPane().add(jLabelEtapa, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, -1, -1));
 
         jMenuBar1.setMinimumSize(new java.awt.Dimension(56, 31));
@@ -131,14 +142,7 @@ public class JDialogLoading extends javax.swing.JDialog {
 
     private void jButtonExecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExecutarActionPerformed
         try {
-            switch (local) {
-                case "0":
-                    retornoConsultaTotal();
-                    break;
-                case "1":
-                    break;
-            }
-
+            retornoConsultaTotal();
         } catch (SQLException ex) {
             Logger.getLogger(JDialogLoading.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -163,50 +167,68 @@ public class JDialogLoading extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     public void retornoConsultaTotal() throws SQLException {
-        jLabelEtapa.setText("Etapa processamento: 1/3");
+
         HibernateConfiguration.setBase("minerador");
-        jProgressBar.setIndeterminate(false);
+
         List<Usuario> listarUsuarios = new DaoUsuario().listar("", "id");
-        jProgressBar.setMaximum(listarUsuarios.size());
-        List<Issue> listarIssue;
+        List<Issue> listarIssue = new DaoIssues().obterPorComponente(componente, dataInicial, dataFinal);
         List<Comment> listarComment = new ArrayList<>();
-        if (!"".equals(componente) && componente != null) {
 
-            listarIssue = new DaoIssues().obterPorComponente(componente,dataInicial,dataFinal);
+        jProgressBar.setIndeterminate(false);
+        jProgressBar.setMaximum(listarIssue.size());
+        jProgressBar.setValue(0);
 
-            for (Issue issueLista : listarIssue) {
-                List<Comment> obterPorIssue = new DaoComment().obterPorIssue(issueLista);
-                for (Comment comment : obterPorIssue) {
-                    listarComment.add(comment);
-                }
+        for (Issue issueLista : listarIssue) {
+
+            List<Comment> obterPorIssue = new DaoComment().obterPorIssue(issueLista);
+            for (Comment comment : obterPorIssue) {
+                listarComment.add(comment);
             }
-
-        } else {
-            listarIssue = new DaoIssues().listar("", "id");
-            listarComment = new DaoComment().listar("", "id");
+            jProgressBar.setValue(jProgressBar.getValue() + 1);
         }
-
+        
+        
+        List<Commit> listaCommit = new DaoCommit().obterPorData(dataInicial, dataFinal);
+        
+        
+        List<Artefato> retornoConsulta = retornoConsulta(listaCommit);
+        
+        
+        
         usuarios = new ArrayList<>();
-
+        jProgressBar.setMaximum(listarUsuarios.size());
+        jProgressBar.setValue(0);
+        jLabelEtapa.setText("Etapa de processamento: 2/3");
+        
         for (Usuario usuario : listarUsuarios) {
             jLabelstatus.setText("Processando usuario: " + usuario.getConta().getEmail());
             double count = 0.0;
 
             for (Issue issue : listarIssue) {
                 if (issue.getSubmittedBy().equals(usuario)) {
-                    count = count + 1;
+                    count++;
                 }
             }
 
             for (Comment comment : listarComment) {
                 if (comment.getCommitedBy().equals(usuario)) {
-                    count = count + 1;
+                    count++;
                 }
             }
 
-            usuarios.add(new Usuarios(null, usuario.getConta().getEmail(), count, ""));
+            List<Commit> commitsTotal = new ArrayList();
+            for (Artefato artefatos : retornoConsulta) {
+                
+                if (artefatos.getCommit().getCommiter().equals(usuario) && !commitsTotal.contains(artefatos.getCommit())) {
+                    commitsTotal.add(artefatos.getCommit());
+                }
+            }
+            count = count+commitsTotal.size();
+            
+            usuarios.add(new Usuarios(null, usuario.getConta().getEmail(), count, componente));
             jProgressBar.setValue(jProgressBar.getValue() + 1);
         }
+        
 
         Double calculoTotalExperiencia = calculoTotalExperiencia();
         List<Usuarios> calculoExperienciaPorUsuario = calculoExperienciaPorUsuario(calculoTotalExperiencia);
@@ -214,7 +236,7 @@ public class JDialogLoading extends javax.swing.JDialog {
 
         this.dispose();
         Util.abrirDialogCentralizado(new JDialogResultado(null, rootPaneCheckingEnabled));
-
+        
     }
 
     public static void executar(final JButton botao) {
@@ -275,4 +297,53 @@ public class JDialogLoading extends javax.swing.JDialog {
         return usuariosProcessados;
     }
 
+    public List retornoConsulta(List<Commit> commits) {
+
+        List<Artefato> total = new ArrayList();
+        try {
+ 
+            FileRepositoryBuilder builder = new FileRepositoryBuilder();
+            Repository repository = builder.setGitDir(new File("D:\\Nova pasta\\GitHub\\core\\.git"))
+                    .readEnvironment()
+                    .findGitDir()
+                    .build();
+
+            jProgressBar.setIndeterminate(false);
+            jProgressBar.setMaximum(commits.size());
+            jProgressBar.setStringPainted(true);
+            jProgressBar.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+            for (Commit string : commits) {
+                jLabelstatus.setText("COMMIT ID: " + string.getCommit());
+
+                ObjectId revid = repository.resolve(string.getCommit());
+                RevWalk revWalk = new RevWalk(repository);
+                RevCommit commit = revWalk.parseCommit(revid);
+                RevWalk rw = new RevWalk(repository);
+                if (commit.getParentCount() > 0) {
+                    RevCommit parent = rw.parseCommit(commit.getParent(0).getId());
+                    DiffFormatter df = new DiffFormatter(DisabledOutputStream.INSTANCE);
+                    df.setRepository(repository);
+                    df.setDiffComparator(RawTextComparator.DEFAULT);
+                    df.setDetectRenames(true);
+                    List<DiffEntry> diffs = df.scan(parent.getTree(), commit.getTree());
+
+                    for (DiffEntry diff : diffs) {
+                        String[] split = diff.getNewPath().split("/");
+                        if (split[0] != null && !"".equals(split[0]) && split[0].indexOf(".") == -1 && ArtefatoMap.verificarComponenteDoArtefato(split[0]).equals(componente) && split.length > 1) {
+
+                            jLabelstatus1.setText(diff.getNewPath());
+                            total.add(new Artefato(diff.getNewPath(), ArtefatoMap.verificarComponenteDoArtefato(split[0]), string));
+
+                        }
+                    }
+                }
+                jProgressBar.setValue(jProgressBar.getValue() + 1);
+
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(JDialogImportantoArtefatos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return total;
+    }
 }
