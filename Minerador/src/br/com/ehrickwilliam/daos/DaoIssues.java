@@ -33,13 +33,13 @@ public class DaoIssues extends DaoGenerics<Issue> {
             if (!inicio.equals("  /  /    ") && !fim.equals("  /  /    ")) {
                 in = formatadorLocal.format(Util.stringToCalendar(inicio).getTime());
                 fi = formatadorLocal.format(Util.stringToCalendar(fim).getTime());
-            } else if(inicio.equals("  /  /    ") && !fim.equals("  /  /    ")){
+            } else if (inicio.equals("  /  /    ") && !fim.equals("  /  /    ")) {
                 in = formatadorLocal.format(Util.stringToCalendar(primeiroRegistro).getTime());
                 fi = formatadorLocal.format(Util.stringToCalendar(fim).getTime());
-            }else if (!inicio.equals("  /  /    ") && fim.equals("  /  /    ")) {
+            } else if (!inicio.equals("  /  /    ") && fim.equals("  /  /    ")) {
                 in = formatadorLocal.format(Util.stringToCalendar(inicio).getTime());
                 fi = formatadorLocal.format(Util.stringToCalendar(segundoRegistro).getTime());
-            } else{
+            } else {
                 in = formatadorLocal.format(Util.stringToCalendar(primeiroRegistro).getTime());
                 fi = formatadorLocal.format(Util.stringToCalendar(segundoRegistro).getTime());
             }
@@ -70,6 +70,23 @@ public class DaoIssues extends DaoGenerics<Issue> {
                 + " where submittedOn BETWEEN '" + in + "' AND '" + fi + "' ORDER BY ferramenta ASC");
         lista = query.list();
         return lista;
+    }
+
+    public List<Issue> obterPorEmail(String email) {
+
+        List<Issue> lista = null;
+        Query query = session.createQuery("From "
+                + alvo.getSimpleName()
+                + " where submittedBy.conta.email = '" + email + "'");
+        lista = query.list();
+        return lista;
+    }
+    
+        public Long count(String email) {
+        Query query = session.createQuery("select count(*) from "
+                + alvo.getSimpleName()
+                + " where assignedTo.conta.email = '"+email+"'");
+        return (Long) query.uniqueResult();
     }
 
 }
