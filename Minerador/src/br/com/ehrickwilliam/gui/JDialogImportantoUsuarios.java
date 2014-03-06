@@ -127,7 +127,7 @@ public class JDialogImportantoUsuarios extends javax.swing.JDialog {
                 usuario.setConta(conta);
                 TransactionManager.beginTransaction();
                 
-                new DaoUsuario().persistir(usuario);
+               // new DaoUsuario().persistir(usuario);
                 TransactionManager.commit();
                 jLabelstatus.setText("Inserindo " + email + " ");
                 jProgressBar.setValue(jProgressBar.getValue() + 1);

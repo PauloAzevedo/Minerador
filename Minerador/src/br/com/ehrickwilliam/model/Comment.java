@@ -57,8 +57,14 @@ public class Comment implements Serializable{
         this.commitedBy = commitedBy;
         this.issue = issue;
     }
-    
-    
+
+    public Calendar getSubmittedOn() {
+        return submittedOn;
+    }
+
+    public void setSubmittedOn(Calendar submittedOn) {
+        this.submittedOn = submittedOn;
+    }
     
 
     public Integer getId() {

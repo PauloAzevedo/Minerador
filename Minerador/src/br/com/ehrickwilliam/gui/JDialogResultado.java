@@ -128,7 +128,7 @@ public class JDialogResultado extends javax.swing.JDialog {
             model = new DefaultTableModel();
             model.setColumnIdentifiers(styleModelUsuarios);
             
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 10; i++) {
                 model.addRow(new Object[]{usuarios.get(i).getArtefatoContribuicao(), usuarios.get(i).getContribuicao().toString(), usuarios.get(i).getEmail()}); 
             }
            

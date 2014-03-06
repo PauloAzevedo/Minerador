@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,7 +54,7 @@ public class JDialogLoading extends javax.swing.JDialog {
     private final String dataInicial;
     private final String dataFinal;
     private final String componente;
-    private final String modo;
+    private final int modo;
 
     public JDialogLoading(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -63,7 +64,7 @@ public class JDialogLoading extends javax.swing.JDialog {
         jProgressBar.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         jButtonExecutar.setVisible(false);
 
-        modo = Data.hash.get("modo").toString();
+        modo = Integer.parseInt(Data.hash.get("modo").toString());
         dataInicial = Data.hash.get("dataInicial").toString();
         dataFinal = Data.hash.get("dataFinal").toString();
         componente = Data.hash.get("componente").toString();
@@ -186,49 +187,21 @@ public class JDialogLoading extends javax.swing.JDialog {
             }
             jProgressBar.setValue(jProgressBar.getValue() + 1);
         }
-        
-        
+
         List<Commit> listaCommit = new DaoCommit().obterPorData(dataInicial, dataFinal);
-        
-        
+
         List<Artefato> retornoConsulta = retornoConsulta(listaCommit);
-        
-        
-        
+
         usuarios = new ArrayList<>();
         jProgressBar.setMaximum(listarUsuarios.size());
         jProgressBar.setValue(0);
         jLabelEtapa.setText("Etapa de processamento: 2/3");
-        
-        for (Usuario usuario : listarUsuarios) {
-            jLabelstatus.setText("Processando usuario: " + usuario.getConta().getEmail());
-            double count = 0.0;
 
-            for (Issue issue : listarIssue) {
-                if (issue.getSubmittedBy().equals(usuario)) {
-                    count++;
-                }
-            }
-
-            for (Comment comment : listarComment) {
-                if (comment.getCommitedBy().equals(usuario)) {
-                    count++;
-                }
-            }
-
-            List<Commit> commitsTotal = new ArrayList();
-            for (Artefato artefatos : retornoConsulta) {
-                
-                if (artefatos.getCommit().getCommiter().equals(usuario) && !commitsTotal.contains(artefatos.getCommit())) {
-                    commitsTotal.add(artefatos.getCommit());
-                }
-            }
-            count = count+commitsTotal.size();
-            
-            usuarios.add(new Usuarios(null, usuario.getConta().getEmail(), count, componente));
-            jProgressBar.setValue(jProgressBar.getValue() + 1);
+        if (modo == 0) {
+            modoNormal(listarUsuarios, listarIssue, listarComment, retornoConsulta);
+        } else {
+            modoDecay(listarUsuarios, listarIssue, listarComment, retornoConsulta);
         }
-        
 
         Double calculoTotalExperiencia = calculoTotalExperiencia();
         List<Usuarios> calculoExperienciaPorUsuario = calculoExperienciaPorUsuario(calculoTotalExperiencia);
@@ -236,7 +209,94 @@ public class JDialogLoading extends javax.swing.JDialog {
 
         this.dispose();
         Util.abrirDialogCentralizado(new JDialogResultado(null, rootPaneCheckingEnabled));
-        
+
+    }
+
+    public void modoNormal(List<Usuario> listarUsuarios, List<Issue> listarIssue, List<Comment> listarComment, List<Artefato> retornoConsulta) {
+
+        for (Usuario usuario : listarUsuarios) {
+            if (!usuario.getConta().getEmail().equals("libreoffice-bugs@lists.freedesktop.org") && !usuario.getConta().getEmail().equals("LibreOffice@bielefeldundbuss.de")) {
+                jLabelstatus.setText("Processando usuario: " + usuario.getConta().getEmail());
+                double count = 0.0;
+
+                for (Issue issue : listarIssue) {
+                    if (issue.getSubmittedBy().equals(usuario)) {
+                        count++;
+                    }
+                }
+
+                for (Comment comment : listarComment) {
+                    if (comment.getCommitedBy().equals(usuario)) {
+                        count++;
+                    }
+                }
+
+                List<Commit> commitsTotal = new ArrayList();
+                for (Artefato artefatos : retornoConsulta) {
+
+                    if (artefatos.getCommit().getCommiter().equals(usuario) && !commitsTotal.contains(artefatos.getCommit())) {
+                        commitsTotal.add(artefatos.getCommit());
+                    }
+                }
+                count = count + commitsTotal.size();
+
+                usuarios.add(new Usuarios(null, usuario.getConta().getEmail(), count, componente));
+                jProgressBar.setValue(jProgressBar.getValue() + 1);
+            }
+        }
+    }
+
+    public void modoDecay(List<Usuario> listarUsuarios, List<Issue> listarIssue, List<Comment> listarComment, List<Artefato> retornoConsulta) {
+
+        for (Usuario usuario : listarUsuarios) {
+            if (!usuario.getConta().getEmail().equals("libreoffice-bugs@lists.freedesktop.org") && !usuario.getConta().getEmail().equals("LibreOffice@bielefeldundbuss.de")) {
+                jLabelstatus.setText("Processando usuario: " + usuario.getConta().getEmail());
+                double count = 0.0;
+                Calendar dataT;
+                for (Issue issue : listarIssue) {
+                    if (!dataInicial.equals("  /  /    ")) {
+                        dataT = Util.stringToCalendar(dataInicial);
+                    } else {
+                        dataT = Util.stringToCalendar("03/08/2010");
+                    }
+                    if (issue.getSubmittedBy().equals(usuario)) {
+                        count = count + (1.0 / (dataT.getTimeInMillis() - issue.getSubmittedOn().getTimeInMillis()));
+                    }
+                }
+
+                for (Comment comment : listarComment) {
+                    if (!dataInicial.equals("  /  /    ")) {
+                        dataT = Util.stringToCalendar(dataInicial);
+                    } else {
+                        dataT = Util.stringToCalendar("03/08/2010");
+                    }
+                    if (comment.getCommitedBy().equals(usuario)) {
+                        count = count + (1.0 / (dataT.getTimeInMillis() - comment.getSubmittedOn().getTimeInMillis()));
+                    }
+                }
+
+                List<Commit> commitsTotal = new ArrayList();
+                for (Artefato artefatos : retornoConsulta) {
+
+                    if (artefatos.getCommit().getCommiter().equals(usuario) && !commitsTotal.contains(artefatos.getCommit())) {
+                        commitsTotal.add(artefatos.getCommit());
+                    }
+                }
+
+                for (Commit commit : commitsTotal) {
+                    if (!dataInicial.equals("  /  /    ")) {
+                        dataT = Util.stringToCalendar(dataInicial);
+                    } else {
+                        dataT = Util.stringToCalendar("03/08/2010");
+                    }
+                    count = count + (1.0 / (dataT.getTimeInMillis() - commit.getDate().getTimeInMillis()));
+                }
+
+                usuarios.add(new Usuarios(null, usuario.getConta().getEmail(), count, componente));
+                jProgressBar.setValue(jProgressBar.getValue() + 1);
+            }
+        }
+
     }
 
     public static void executar(final JButton botao) {
@@ -301,7 +361,7 @@ public class JDialogLoading extends javax.swing.JDialog {
 
         List<Artefato> total = new ArrayList();
         try {
- 
+
             FileRepositoryBuilder builder = new FileRepositoryBuilder();
             Repository repository = builder.setGitDir(new File("D:\\Nova pasta\\GitHub\\core\\.git"))
                     .readEnvironment()
