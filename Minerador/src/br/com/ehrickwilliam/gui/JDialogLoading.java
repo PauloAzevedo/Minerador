@@ -21,6 +21,9 @@ import br.com.ehrickwilliam.model.Usuarios;
 import java.awt.Cursor;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -203,7 +206,7 @@ public class JDialogLoading extends javax.swing.JDialog {
             modoDecay(listarUsuarios, listarIssue, listarComment, retornoConsulta);
         }
 
-        Double calculoTotalExperiencia = calculoTotalExperiencia();
+        BigDecimal calculoTotalExperiencia = calculoTotalExperiencia();
         List<Usuarios> calculoExperienciaPorUsuario = calculoExperienciaPorUsuario(calculoTotalExperiencia);
         Data.hash.put("usuarios", calculoExperienciaPorUsuario);
 
@@ -217,20 +220,20 @@ public class JDialogLoading extends javax.swing.JDialog {
         for (Usuario usuario : listarUsuarios) {
             if (!usuario.getConta().getEmail().equals("libreoffice-bugs@lists.freedesktop.org") && !usuario.getConta().getEmail().equals("LibreOffice@bielefeldundbuss.de")) {
                 jLabelstatus.setText("Processando usuario: " + usuario.getConta().getEmail());
-                double count = 0.0;
+                BigDecimal count = new BigDecimal(1);
 
                 for (Issue issue : listarIssue) {
                     if (issue.getSubmittedBy().equals(usuario)) {
-                        count++;
+                        count = count.add(new BigDecimal(1));
                     }
                 }
 
                 for (Comment comment : listarComment) {
                     if (comment.getCommitedBy().equals(usuario)) {
-                        count++;
+                        count = count.add(new BigDecimal(1));
                     }
                 }
-
+           
                 List<Commit> commitsTotal = new ArrayList();
                 for (Artefato artefatos : retornoConsulta) {
 
@@ -238,8 +241,8 @@ public class JDialogLoading extends javax.swing.JDialog {
                         commitsTotal.add(artefatos.getCommit());
                     }
                 }
-                count = count + commitsTotal.size();
-
+                count = count.add(new BigDecimal(commitsTotal.size()));
+               
                 usuarios.add(new Usuarios(null, usuario.getConta().getEmail(), count, componente));
                 jProgressBar.setValue(jProgressBar.getValue() + 1);
             }
@@ -251,7 +254,7 @@ public class JDialogLoading extends javax.swing.JDialog {
         for (Usuario usuario : listarUsuarios) {
             if (!usuario.getConta().getEmail().equals("libreoffice-bugs@lists.freedesktop.org") && !usuario.getConta().getEmail().equals("LibreOffice@bielefeldundbuss.de")) {
                 jLabelstatus.setText("Processando usuario: " + usuario.getConta().getEmail());
-                double count = 0.0;
+                BigDecimal count = new BigDecimal(0.0);
                 Calendar dataT;
                 for (Issue issue : listarIssue) {
                     if (!dataInicial.equals("  /  /    ")) {
@@ -260,7 +263,9 @@ public class JDialogLoading extends javax.swing.JDialog {
                         dataT = Util.stringToCalendar("03/08/2010");
                     }
                     if (issue.getSubmittedBy().equals(usuario)) {
-                        count = count + (1.0 / (dataT.getTimeInMillis() - issue.getSubmittedOn().getTimeInMillis()));
+                        BigDecimal subtract = new BigDecimal(dataT.getTimeInMillis()).subtract(new BigDecimal(issue.getSubmittedOn().getTimeInMillis()));
+                        if(Double.isNaN(1 / subtract.doubleValue()))
+                        count = count.add(new BigDecimal(1 / subtract.doubleValue()));
                     }
                 }
 
@@ -271,7 +276,8 @@ public class JDialogLoading extends javax.swing.JDialog {
                         dataT = Util.stringToCalendar("03/08/2010");
                     }
                     if (comment.getCommitedBy().equals(usuario)) {
-                        count = count + (1.0 / (dataT.getTimeInMillis() - comment.getSubmittedOn().getTimeInMillis()));
+                        BigDecimal subtract = new BigDecimal(dataT.getTimeInMillis()).subtract(new BigDecimal(comment.getSubmittedOn().getTimeInMillis()));
+                        count = count.add(new BigDecimal(1 / subtract.doubleValue()));
                     }
                 }
 
@@ -289,7 +295,11 @@ public class JDialogLoading extends javax.swing.JDialog {
                     } else {
                         dataT = Util.stringToCalendar("03/08/2010");
                     }
-                    count = count + (1.0 / (dataT.getTimeInMillis() - commit.getDate().getTimeInMillis()));
+                    BigDecimal subtract = new BigDecimal(dataT.getTimeInMillis()).subtract(new BigDecimal(commit.getDate().getTimeInMillis()));
+                    
+                    if(Double.isNaN(subtract.doubleValue()))
+                    count = count.add(new BigDecimal(1/subtract.doubleValue()));
+                    
                 }
 
                 usuarios.add(new Usuarios(null, usuario.getConta().getEmail(), count, componente));
@@ -310,7 +320,7 @@ public class JDialogLoading extends javax.swing.JDialog {
                         flag = +1;
 
                     } catch (Exception e) {
-                        System.out.println(e);
+                        Logger.getLogger(JDialogImportantoArtefatos.class.getName()).log(Level.SEVERE, null, e);
                     }
                 }
             }
@@ -318,29 +328,31 @@ public class JDialogLoading extends javax.swing.JDialog {
 
     }
 
-    public Double calcularExperiencia(Double divisor, Double total) {
-        return divisor / total;
+    public BigDecimal calcularExperiencia(BigDecimal divisor, BigDecimal total) {
+
+        return new BigDecimal(divisor.doubleValue() / total.doubleValue());
     }
 
-    public Double calculoTotalExperiencia() {
+    public BigDecimal calculoTotalExperiencia() {
 
-        Double soma = 0.0;
+        BigDecimal soma = new BigDecimal(0);
         jProgressBar.setMaximum(usuarios.size());
         jProgressBar.setValue(0);
         jLabelEtapa.setText("Etapa calculo de experiencia: 2/3");
         for (Usuarios usu : usuarios) {
-            soma = soma + usu.getContribuicao();
+            soma = soma.add(usu.getContribuicao());
             this.setTitle(usu.getEmail());
             jProgressBar.setValue(jProgressBar.getValue() + 1);
             jLabelstatus.setText("Processando usuário: " + usu.getEmail() + "");
             jLabelstatus1.setText("Experiencia acumulada: " + soma);
         }
+
         return soma;
     }
 
-    public List<Usuarios> calculoExperienciaPorUsuario(double exp) {
+    public List<Usuarios> calculoExperienciaPorUsuario(BigDecimal exp) {
         List<Usuarios> usuariosProcessados = new ArrayList();
-        Double soma = 0.0;
+        BigDecimal soma = new BigDecimal(0);
         jProgressBar.setMaximum(usuarios.size());
         jProgressBar.setValue(0);
         jLabelEtapa.setText("Etapa calculo de experiencia do usuario: 3/3");

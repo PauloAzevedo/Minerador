@@ -7,6 +7,7 @@
 package br.com.ehrickwilliam.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Comparator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,7 +33,7 @@ public class Usuarios implements Serializable{
     };
     private String nome;
     private String email;
-    private Double contribuicao;
+    private BigDecimal contribuicao;
     private String artefatoContribuicao;
 
     public Integer getId() {
@@ -42,7 +43,7 @@ public class Usuarios implements Serializable{
     public Usuarios() {
     }
 
-    public Usuarios(String nome, String email, Double contribuicao, String artefatoContribuicao) {
+    public Usuarios(String nome, String email, BigDecimal contribuicao, String artefatoContribuicao) {
         this.nome = nome;
         this.email = email;
         this.contribuicao = contribuicao;
@@ -71,11 +72,11 @@ public class Usuarios implements Serializable{
         this.email = email;
     }
 
-    public Double getContribuicao() {
+    public BigDecimal getContribuicao() {
         return contribuicao;
     }
 
-    public void setContribuicao(Double contribuicao) {
+    public void setContribuicao(BigDecimal contribuicao) {
         this.contribuicao = contribuicao;
     }
 

@@ -11,7 +11,10 @@ import br.com.ehrickwilliam.daos.DaoIssues;
 import br.com.ehrickwilliam.model.Comment;
 import br.com.ehrickwilliam.model.Issue;
 import br.com.ehrickwilliam.model.Usuario;
+import br.com.ehrickwilliam.model.Usuarios;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -26,15 +29,8 @@ public class Validacao {
         HibernateConfiguration.setUser("root");
         HibernateConfiguration.setPass("root");
 
-        String[] novatos = new String[]{
-            "commerce@traduction.biz",
-            "kami911@gmail.com",
-            "netrolller.3d@gmail.com",
-            "jesus@softcatala.org",
-            "dezsiszabi@hotmail.com",
-            "sebastian@sspaeth.de",
-            "pjacquod@alumni.ethz.ch",
-            "robert@openbsd.org"
+         String[] novatos = new String[]{
+            "lbalbalba@gmail.com"
         };
 
         List<Comment> listarComment = new ArrayList<>();
@@ -43,7 +39,7 @@ public class Validacao {
             List<Issue> obterPorEmail = new DaoIssues().obterPorEmail(novatos[i]);
 
             for (Issue issue : obterPorEmail) {
-                System.out.println("Issue ID " + issue.getIssue() + " Submitted By: " + novatos[i] + " Assigned To: " + issue.getAssignedTo().getConta().getEmail() + " Assigne value: "+new DaoIssues().count(issue.getAssignedTo().getConta().getEmail()));
+                System.out.println("Issue ID " + issue.getIssue() + " Componente: "+issue.getFerramenta()+" Submitted By: " + novatos[i] + " Assigned To: " + issue.getAssignedTo().getConta().getEmail() + " Assigne value: " + new DaoIssues().count(issue.getAssignedTo().getConta().getEmail()));
                 System.out.println("--Respostas--");
 
                 {
@@ -53,28 +49,28 @@ public class Validacao {
                         listarComment.add(comment);
                     }
 
-                    List usuariosRespostas = new ArrayList();
+                    List<UsuariosComments> usuariosRespostas = new ArrayList();
                     List<String> email = new ArrayList<>();
                     for (Comment comm : listarComment) {
                         int count = 0;
                         for (Comment comm2 : listarComment) {
-                            if (comm.getCommitedBy().equals(comm2.getCommitedBy())) {
+                            if (comm.getCommitedBy().equals(comm2.getCommitedBy()) && !comm.getCommitedBy().getConta().getEmail().equals(novatos[i])) {
                                 count++;
                             }
                         }
-                        Object[] user = new Object[]{comm.getCommitedBy(), count};
+                        UsuariosComments user = new UsuariosComments(comm.getCommitedBy(), count);
 
-                        if (!email.contains(comm.getCommitedBy().getConta().getEmail())) {
+                        if (!email.contains(comm.getCommitedBy().getConta().getEmail()) && !comm.getCommitedBy().getConta().getEmail().equals(novatos[i])) {
                             email.add(comm.getCommitedBy().getConta().getEmail());
                             usuariosRespostas.add(user);
                         }
                     }
 
-                    for (Object object : usuariosRespostas) {
-                        Object[] c = (Object[]) object;
-                        Usuario co = (Usuario) c[0];
-                        int count = (int) c[1];
-                        System.out.println(co.getConta().getEmail() + " interagiu " + count + "" + (count > 1 ? " vezes" : " vez"));
+                    Collections.sort(usuariosRespostas, UsuariosComments.POR_TOTAL);
+                    Collections.reverse(usuariosRespostas);
+
+                    for (UsuariosComments object : usuariosRespostas) {
+                        System.out.println(object.usuario.getConta().getEmail() + " interagiu " + object.total + "" + (object.total > 1 ? " vezes" : " vez"));
                     }
                 }
                 System.out.println("");
@@ -82,4 +78,40 @@ public class Validacao {
         }
 
     }
+}
+
+class UsuariosComments {
+
+    Usuario usuario;
+    Integer total;
+
+    public static final Comparator<UsuariosComments> POR_TOTAL = new Comparator<UsuariosComments>() {
+
+        @Override
+        public int compare(UsuariosComments t, UsuariosComments t1) {
+            return t.total.compareTo(t1.total);
+        }
+    };
+
+    public UsuariosComments(Usuario usuario, int total) {
+        this.usuario = usuario;
+        this.total = total;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
 }

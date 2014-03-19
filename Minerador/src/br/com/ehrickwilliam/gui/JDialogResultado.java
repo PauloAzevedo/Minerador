@@ -22,7 +22,7 @@ public class JDialogResultado extends javax.swing.JDialog {
      * Creates new form JDialogPesquisaCliente
      */
     private DefaultTableModel model;
-    private String styleModelUsuarios[] = new String[]{"Artefato", "Contribuição", "E-mail"};
+    private String styleModelUsuarios[] = new String[]{"Pos.","Artefato", "Contribuição", "E-mail"};
     private List<Usuarios> usuarios;
 
     public JDialogResultado(java.awt.Frame parent, boolean modal) {
@@ -49,8 +49,6 @@ public class JDialogResultado extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Resultado");
         setMinimumSize(new java.awt.Dimension(637, 430));
-        setResizable(false);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTableCliente.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -79,8 +77,6 @@ public class JDialogResultado extends javax.swing.JDialog {
         ));
         jScrollPane1.setViewportView(jTableCliente);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 610, 350));
-
         jMenuBar1.setMinimumSize(new java.awt.Dimension(569, 310));
         jMenuBar1.setPreferredSize(new java.awt.Dimension(396, 31));
         jMenuBar1.setRequestFocusEnabled(false);
@@ -95,6 +91,23 @@ public class JDialogResultado extends javax.swing.JDialog {
         jMenuBar1.add(jMenu6);
 
         setJMenuBar(jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+                .addGap(20, 20, 20))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                .addGap(13, 13, 13))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -129,7 +142,7 @@ public class JDialogResultado extends javax.swing.JDialog {
             model.setColumnIdentifiers(styleModelUsuarios);
             
             for (int i = 0; i < 10; i++) {
-                model.addRow(new Object[]{usuarios.get(i).getArtefatoContribuicao(), usuarios.get(i).getContribuicao().toString(), usuarios.get(i).getEmail()}); 
+                model.addRow(new Object[]{(i+1)+"º",usuarios.get(i).getArtefatoContribuicao(), usuarios.get(i).getContribuicao().toString(), usuarios.get(i).getEmail()}); 
             }
            
             jTableCliente.setModel(model);
