@@ -56,7 +56,7 @@ public class Leitor {
         }
         
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
-        Repository repository = builder.setGitDir(new File("D:\\Nova pasta\\GitHub\\core\\.git"))
+        Repository repository = builder.setGitDir(new File("C:\\Users\\ehrick\\Documents\\GitHub\\core\\.git"))
                 .readEnvironment()
                 .findGitDir()
                 .build();

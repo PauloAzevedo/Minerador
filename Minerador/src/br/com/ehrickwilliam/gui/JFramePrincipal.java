@@ -24,11 +24,11 @@ public class JFramePrincipal extends javax.swing.JFrame {
      * Creates new form JFramePrincipal
      */
     public JFramePrincipal() {
-        try {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
+//        try {
+//            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+//        } catch (Exception ex) {
+//            System.out.println(ex);
+//        }
         initComponents();
         jFormattedTextFieldFinal.setText(null);
         jFormattedTextFieldInicial.setText(null);

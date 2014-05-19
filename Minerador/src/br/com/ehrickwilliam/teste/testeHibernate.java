@@ -24,11 +24,11 @@ public class testeHibernate {
         HibernateConfiguration.setPass("root");
         HibernateConfiguration.setHost("127.0.0.1");
         HibernateConfiguration.setUser("root");
-        //HibernateConfiguration.criarSchema();
-        List<Issue> obterDataInicial = new DaoIssues().obterData(Util.stringToCalendar("08/03/1980"),Util.stringToCalendar("08/04/2015"));
-        for (Issue issue : obterDataInicial) {
-            System.out.println(issue);
-        }
-        System.out.println(obterDataInicial.size());
+        HibernateConfiguration.criarSchema();
+//        List<Issue> obterDataInicial = new DaoIssues().obterData(Util.stringToCalendar("08/03/1980"),Util.stringToCalendar("08/04/2015"));
+//        for (Issue issue : obterDataInicial) {
+//            System.out.println(issue);
+//        }
+//        System.out.println(obterDataInicial.size());
     }
 }

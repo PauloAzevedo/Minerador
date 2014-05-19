@@ -8,7 +8,9 @@ package br.com.ehrickwilliam.conexao;
 import br.com.ehrickwilliam.model.Artefato;
 import br.com.ehrickwilliam.model.Comment;
 import br.com.ehrickwilliam.model.Commit;
+import br.com.ehrickwilliam.model.Componente;
 import br.com.ehrickwilliam.model.Conta;
+import br.com.ehrickwilliam.model.Diretorio;
 import br.com.ehrickwilliam.model.Issue;
 import br.com.ehrickwilliam.model.Usuario;
 import br.com.ehrickwilliam.model.Usuarios;
@@ -49,7 +51,7 @@ public class HibernateConfiguration {
             cfg.setProperty("hibernate.connection.url", "jdbc:mysql://" + host + "/" + base);
             cfg.setProperty("hibernate.show_sql", "false");
             cfg.setProperty("hibernate.connection.autocommit", "true");
-//
+
             cfg.addAnnotatedClass(Usuario.class);
             cfg.addAnnotatedClass(Commit.class);
             cfg.addAnnotatedClass(Conta.class);
@@ -57,6 +59,8 @@ public class HibernateConfiguration {
             cfg.addAnnotatedClass(Comment.class);
             cfg.addAnnotatedClass(Usuarios.class);
             cfg.addAnnotatedClass(Artefato.class);
+            cfg.addAnnotatedClass(Diretorio.class);
+            cfg.addAnnotatedClass(Componente.class);
             
             
             sessionFactory = cfg.buildSessionFactory();
