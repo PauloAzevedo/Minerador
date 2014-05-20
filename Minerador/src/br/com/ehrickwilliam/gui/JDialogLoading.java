@@ -402,7 +402,7 @@ public class JDialogLoading extends javax.swing.JDialog {
 
                     for (DiffEntry diff : diffs) {
                         String[] split = diff.getNewPath().split("/");
-                        if (split[0] != null && !"".equals(split[0]) && split[0].indexOf(".") == -1 && ArtefatoMap.verificarComponenteDoArtefato(split[0]).equals(componente) && split.length > 1) {
+                        if (split[0] != null && !"".equals(split[0]) && split[0].indexOf(".") == -1 && split.length > 1) {
 
                             jLabelstatus1.setText(diff.getNewPath());
                             total.add(new Artefato(diff.getNewPath(), ArtefatoMap.verificarComponenteDoArtefato(split[0]), string));

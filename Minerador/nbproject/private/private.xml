@@ -5,7 +5,13 @@
         <group>
             <file>file:/C:/Users/ehrick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/gui/JDialogCriacaoBase.java</file>
             <file>file:/C:/Users/ehrick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/bibliotecas/Leitor.java</file>
+            <file>file:/C:/Users/ehrick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/daos/DaoCommit.java</file>
+            <file>file:/C:/Users/ehrick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/daos/DaoDiretorio.java</file>
+            <file>file:/C:/Users/ehrick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/model/Componente.java</file>
+            <file>file:/C:/Users/ehrick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/daos/DaoArtefato.java</file>
             <file>file:/C:/Users/ehrick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/gui/JDialogLoading.java</file>
+            <file>file:/C:/Users/ehrick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/teste/TesteComponente.java</file>
+            <file>file:/C:/Users/ehrick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/daos/DaoComponente.java</file>
             <file>file:/C:/Users/ehrick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/gui/JDialogImportantoUsuarios.java</file>
             <file>file:/C:/Users/ehrick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/gui/JFramePrincipal.java</file>
             <file>file:/C:/Users/ehrick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/gui/JDialogImportantoArtefatos.java</file>
@@ -16,7 +22,7 @@
             <file>file:/C:/Users/ehrick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/teste/testeDiretorios.java</file>
             <file>file:/C:/Users/ehrick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/bibliotecas/Util.java</file>
             <file>file:/C:/Users/ehrick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/conexao/HibernateConfiguration.java</file>
-            <file>file:/C:/Users/ehrick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/gui/JDialogImportantoIssues.java</file>
+            <file>file:/C:/Users/ehrick/Documents/GitHub/Minerador/Minerador/src/br/com/ehrickwilliam/model/ArtefatoMap.java</file>
         </group>
     </open-files>
 </project-private>

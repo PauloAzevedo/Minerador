@@ -49,7 +49,7 @@ public class HibernateConfiguration {
             cfg.setProperty("hibernate.connection.username", user);
             cfg.setProperty("hibernate.connection.password", pass);
             cfg.setProperty("hibernate.connection.url", "jdbc:mysql://" + host + "/" + base);
-            cfg.setProperty("hibernate.show_sql", "false");
+            cfg.setProperty("hibernate.show_sql", "true");
             cfg.setProperty("hibernate.connection.autocommit", "true");
 
             cfg.addAnnotatedClass(Usuario.class);

@@ -33,5 +33,15 @@ public class DaoDiretorio extends DaoGenerics<Diretorio> {
         }
 
     }
+    
+        public List<Diretorio> retornoUrl(String componente,String componente2,String componente3,String componente4,String componente5) {
+
+        Query query = session.createQuery("From "
+                + alvo.getSimpleName()
+                + " where url LIKE '%" + componente + "%' or url LIKE '%"+componente2+"%' OR url LIKE '%"+componente3+"%'"
+                + " OR url LIKE '%"+componente4+"%' OR url LIKE '%"+componente5+"%'");
+        int total = query.list().size();
+        return query.list();
+    }
 
 }

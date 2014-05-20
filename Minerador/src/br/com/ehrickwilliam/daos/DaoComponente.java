@@ -20,7 +20,7 @@ public class DaoComponente extends DaoGenerics<Componente> {
         super.alvo = Componente.class;
     }
 
-    public List<Commit> obterPorComponete(String componente) {
+    public List<Componente> obterPorComponete(String componente) {
         
         Query query = session.createQuery("From "
                 + alvo.getSimpleName()
