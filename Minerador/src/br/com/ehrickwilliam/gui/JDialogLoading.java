@@ -58,6 +58,7 @@ public class JDialogLoading extends javax.swing.JDialog {
     private final String dataFinal;
     private final String componente;
     private final int modo;
+    private static int flag = 0;
 
     public JDialogLoading(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -153,7 +154,7 @@ public class JDialogLoading extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonExecutarActionPerformed
 
     private void jMenuPararMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuPararMouseClicked
-
+            flag = 1;
     }//GEN-LAST:event_jMenuPararMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -313,7 +314,7 @@ public class JDialogLoading extends javax.swing.JDialog {
         new Thread() {
             @Override
             public void run() {
-                int flag = 0;
+               
                 while (flag == 0) {
                     try {
                         botao.doClick();
